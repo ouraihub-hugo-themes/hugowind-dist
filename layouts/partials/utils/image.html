@@ -28,14 +28,19 @@
   {{- $loading = "eager" -}}
 {{- end }}
 
-{{- /* 尝试获取图片资源 */ -}}
+{{- /* 检查是否为外部 URL */ -}}
+{{- $isExternal := or (hasPrefix $src "http://") (hasPrefix $src "https://") (hasPrefix $src "//") -}}
+
+{{- /* 尝试获取图片资源（仅对本地图片） */ -}}
 {{- $image := "" -}}
-{{- if $page }}
-  {{- $image = $page.Resources.GetMatch $src -}}
-{{- end }}
-{{- if not $image }}
-  {{- $image = resources.Get $src -}}
-{{- end }}
+{{- if not $isExternal -}}
+  {{- if $page }}
+    {{- $image = $page.Resources.GetMatch $src -}}
+  {{- end }}
+  {{- if not $image }}
+    {{- $image = resources.Get $src -}}
+  {{- end }}
+{{- end -}}
 
 {{- if $image -}}
   {{- /* 生成多种尺寸的响应式图片 */ -}}

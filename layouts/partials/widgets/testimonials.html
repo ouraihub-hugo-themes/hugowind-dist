@@ -1,0 +1,115 @@
+{{- /*
+  Testimonials Widget - 复刻 AstroWind Testimonials.astro
+  参考: astrowind/src/components/widgets/Testimonials.astro
+  
+  参数:
+    - id: 可选，section 的 ID
+    - isDark: 可选，是否使用暗色背景
+    - tagline: 可选，标签行
+    - title: 可选，主标题
+    - subtitle: 可选，副标题
+    - testimonials: 必需，评价数组
+      - title: 可选，评价标题
+      - testimonial: 评价内容
+      - name: 评价者姓名
+      - job: 评价者职位
+      - image: 可选，头像图片
+        - src: 图片路径
+        - alt: 替代文本
+    - callToAction: 可选，行动按钮
+    - bg: 可选，自定义背景 HTML
+    - classes: 可选，自定义样式类
+  
+  Requirements: 1.7
+*/ -}}
+
+{{- $id := .id | default "" -}}
+{{- $isDark := .isDark | default false -}}
+{{- $tagline := .tagline | default "" -}}
+{{- $title := .title | default "" -}}
+{{- $subtitle := .subtitle | default "" -}}
+{{- $testimonials := .testimonials | default slice -}}
+{{- $callToAction := .callToAction | default dict -}}
+{{- $bg := .bg | default "" -}}
+{{- $classes := .classes | default dict -}}
+
+{{- /* 构建容器类 */ -}}
+{{- $containerClass := printf "max-w-6xl %s" ($classes.container | default "") -}}
+
+<section class="relative not-prose scroll-mt-[72px]"{{ with $id }} id="{{ . }}"{{ end }}>
+  {{- /* 背景层 */ -}}
+  <div class="absolute inset-0 pointer-events-none -z-1" aria-hidden="true">
+    {{- if $bg -}}
+      {{ $bg | safeHTML }}
+    {{- else -}}
+      <div class="absolute inset-0{{ if $isDark }} bg-dark dark:bg-transparent{{ end }}"></div>
+    {{- end -}}
+  </div>
+  
+  {{- /* 内容容器 */ -}}
+  <div class="relative mx-auto px-4 md:px-6 py-12 md:py-16 lg:py-20 text-default intersect-once intersect-quarter intersect-no-queue motion-safe:md:opacity-0 motion-safe:md:intersect:animate-fade {{ $containerClass }}{{ if $isDark }} dark{{ end }}">
+    {{- /* Headline 部分 */ -}}
+    {{- partial "ui/headline.html" (dict "title" $title "subtitle" $subtitle "tagline" $tagline) -}}
+    
+    {{- /* Testimonials 网格 */ -}}
+    <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+      {{- range $testimonials -}}
+      <div class="flex h-auto intersect-once motion-safe:md:intersect:animate-fade motion-safe:md:opacity-0 intersect-quarter">
+        <div class="flex flex-col p-4 md:p-6 rounded-md shadow-xl dark:shadow-none dark:border dark:border-slate-600">
+          {{- /* 评价标题 */ -}}
+          {{- with .title -}}
+          <h2 class="text-lg font-medium leading-6 pb-4">{{ . }}</h2>
+          {{- end -}}
+          
+          {{- /* 评价内容 */ -}}
+          {{- with .testimonial -}}
+          <blockquote class="flex-auto">
+            <p class="text-muted">" {{ . }} "</p>
+          </blockquote>
+          {{- end -}}
+          
+          {{- /* 分隔线 */ -}}
+          <hr class="border-slate-200 dark:border-slate-600 my-4" />
+          
+          {{- /* 评价者信息 */ -}}
+          <div class="flex items-center">
+            {{- /* 头像 */ -}}
+            {{- with .image -}}
+              {{- $imgSrc := "" -}}
+              {{- $imgAlt := "" -}}
+              {{- if reflect.IsMap . -}}
+                {{- $imgSrc = .src -}}
+                {{- $imgAlt = .alt | default "" -}}
+              {{- else -}}
+                {{- $imgSrc = . -}}
+              {{- end -}}
+              {{- if $imgSrc -}}
+              <div class="h-10 w-10 rounded-full border border-slate-200 dark:border-slate-600">
+                <img class="h-10 w-10 rounded-full border border-slate-200 dark:border-slate-600 min-w-full min-h-full object-cover" src="{{ $imgSrc }}" alt="{{ $imgAlt }}" width="40" height="40" loading="lazy" />
+              </div>
+              {{- end -}}
+            {{- end -}}
+            
+            {{- /* 姓名和职位 */ -}}
+            <div class="grow ml-3 rtl:ml-0 rtl:mr-3">
+              {{- with .name -}}
+              <p class="text-base font-semibold">{{ . }}</p>
+              {{- end -}}
+              {{- with .job -}}
+              <p class="text-xs text-muted">{{ . }}</p>
+              {{- end -}}
+            </div>
+          </div>
+        </div>
+      </div>
+      {{- end -}}
+    </div>
+    
+    {{- /* Call to Action 按钮 */ -}}
+    {{- if and $callToAction $callToAction.text -}}
+    <div class="flex justify-center mx-auto w-fit mt-8 md:mt-12 font-medium">
+      {{- partial "ui/button.html" $callToAction -}}
+    </div>
+    {{- end -}}
+  </div>
+</section>

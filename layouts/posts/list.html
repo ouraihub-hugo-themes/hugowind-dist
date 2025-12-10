@@ -1,0 +1,48 @@
+{{- /*
+  Blog List Layout - 博客列表布局
+  参考 AstroWind src/pages/[...blog]/[...page].astro
+  
+  Requirements: 6.1
+*/ -}}
+
+{{- define "main" }}
+<section class="px-6 sm:px-6 py-12 sm:py-16 lg:py-20 mx-auto max-w-4xl">
+  {{- /* 页面标题区域 - 参考 AstroWind Headline.astro */ -}}
+  <header class="mb-8 md:mb-16 text-center max-w-3xl mx-auto">
+    <h1 class="text-4xl md:text-5xl font-bold leading-tighter tracking-tighter font-heading dark:text-slate-200">
+      {{ .Title | default (i18n "blog" | default "The Blog") }}
+    </h1>
+    {{- with .Description }}
+    <div class="mt-2 md:mt-3 mx-auto text-xl text-gray-500 dark:text-slate-400 font-medium">
+      {{ . }}
+    </div>
+    {{- else }}
+    <div class="mt-2 md:mt-3 mx-auto text-xl text-gray-500 dark:text-slate-400 font-medium">
+      {{ i18n "blog_subtitle" | default "A statically generated blog example with news, tutorials, resources and other interesting content related to HugoWind" }}
+    </div>
+    {{- end }}
+  </header>
+  
+  {{- /* 文章列表 - 参考 AstroWind List.astro */ -}}
+  {{- $paginator := .Paginate .Pages }}
+  {{- if gt (len $paginator.Pages) 0 }}
+  <ul>
+    {{- range $paginator.Pages }}
+    <li class="mb-12 md:mb-20">
+      {{ partial "blog/list-item.html" . }}
+    </li>
+    {{- end }}
+  </ul>
+  
+  {{- /* 分页 */ -}}
+  {{ partial "blog/pagination.html" . }}
+  {{- else }}
+  {{- /* 无文章提示 */ -}}
+  <div class="text-center py-12">
+    <p class="text-xl text-muted dark:text-slate-400">
+      {{ i18n "no_posts" | default "No posts found." }}
+    </p>
+  </div>
+  {{- end }}
+</section>
+{{- end }}

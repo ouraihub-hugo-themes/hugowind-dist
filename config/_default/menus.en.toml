@@ -130,32 +130,26 @@
 [[main]]
   parent = "blog"
   name = "Blog List"
-  pageRef = "/blog/"
+  pageRef = "/posts/"
   weight = 1
 
 [[main]]
   parent = "blog"
   name = "Article"
-  pageRef = "/get-started-website-with-astro-tailwind-css/"
+  pageRef = "/posts/getting-started/"
   weight = 2
 
 [[main]]
   parent = "blog"
-  name = "Article (with MDX)"
-  pageRef = "/markdown-elements-demo-post/"
+  name = "Category Page"
+  pageRef = "/categories/tutorial/"
   weight = 3
 
 [[main]]
   parent = "blog"
-  name = "Category Page"
-  pageRef = "/category/tutorials/"
-  weight = 4
-
-[[main]]
-  parent = "blog"
   name = "Tag Page"
-  pageRef = "/tag/astro/"
-  weight = 5
+  pageRef = "/tags/hugo/"
+  weight = 4
 
 # ===== Widgets 单独链接 =====
 [[main]]
@@ -166,16 +160,141 @@
 # ===== Header Actions =====
 [[actions]]
   name = "Download"
-  url = "https://github.com/onwidget/astrowind"
+  url = "https://github.com/ouraihub-hugo-themes/hugowind-dist"
   weight = 1
 
 # ===== Footer Links =====
-[[footer]]
+# Product 列
+[[footer_product]]
+  name = "Features"
+  url = "#"
+  weight = 1
+
+[[footer_product]]
+  name = "Security"
+  url = "#"
+  weight = 2
+
+[[footer_product]]
+  name = "Team"
+  url = "#"
+  weight = 3
+
+[[footer_product]]
+  name = "Enterprise"
+  url = "#"
+  weight = 4
+
+[[footer_product]]
+  name = "Customer stories"
+  url = "#"
+  weight = 5
+
+[[footer_product]]
+  name = "Pricing"
+  pageRef = "/pricing/"
+  weight = 6
+
+[[footer_product]]
+  name = "Resources"
+  url = "#"
+  weight = 7
+
+# Platform 列
+[[footer_platform]]
+  name = "Developer API"
+  url = "#"
+  weight = 1
+
+[[footer_platform]]
+  name = "Partners"
+  url = "#"
+  weight = 2
+
+[[footer_platform]]
+  name = "Atom"
+  url = "#"
+  weight = 3
+
+[[footer_platform]]
+  name = "Electron"
+  url = "#"
+  weight = 4
+
+[[footer_platform]]
+  name = "HugoWind Desktop"
+  url = "#"
+  weight = 5
+
+# Support 列
+[[footer_support]]
+  name = "Docs"
+  url = "#"
+  weight = 1
+
+[[footer_support]]
+  name = "Community Forum"
+  url = "#"
+  weight = 2
+
+[[footer_support]]
+  name = "Professional Services"
+  url = "#"
+  weight = 3
+
+[[footer_support]]
+  name = "Skills"
+  url = "#"
+  weight = 4
+
+[[footer_support]]
+  name = "Status"
+  url = "#"
+  weight = 5
+
+# Company 列
+[[footer_company]]
+  name = "About"
+  pageRef = "/about/"
+  weight = 1
+
+[[footer_company]]
+  name = "Blog"
+  pageRef = "/posts/"
+  weight = 2
+
+[[footer_company]]
+  name = "Careers"
+  url = "#"
+  weight = 3
+
+[[footer_company]]
+  name = "Press"
+  url = "#"
+  weight = 4
+
+[[footer_company]]
+  name = "Inclusion"
+  url = "#"
+  weight = 5
+
+[[footer_company]]
+  name = "Social Impact"
+  url = "#"
+  weight = 6
+
+[[footer_company]]
+  name = "Shop"
+  url = "#"
+  weight = 7
+
+# Secondary Footer Links (底部法律链接)
+[[footer_secondary]]
   name = "Terms"
   pageRef = "/terms/"
   weight = 1
 
-[[footer]]
+[[footer_secondary]]
   name = "Privacy Policy"
   pageRef = "/privacy/"
   weight = 2

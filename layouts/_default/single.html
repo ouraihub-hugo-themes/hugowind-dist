@@ -1,4 +1,56 @@
-{{- define "main" }}
+{{- /*
+  Default Single Page Layout - 默认单页布局模板
+  
+  支持两种模式：
+  1. sections 模式：通过 Front Matter 的 sections 配置组装页面
+  2. 文章模式：传统的博客文章布局（默认）
+  
+  Front Matter 配置示例（sections 模式）：
+  ---
+  sections:
+    - type: "hero"
+      title: "..."
+    - type: "features"
+      items: [...]
+  ---
+  
+  Requirements: 3.1
+*/ -}}
+
+{{- define "main" -}}
+
+{{- /* 检查是否有 sections 配置 */ -}}
+{{- if .Params.sections -}}
+  {{- /* Sections 模式：遍历 sections 配置，渲染对应的 Widget */ -}}
+  {{- range .Params.sections -}}
+    {{- $widgetType := .type | default "" -}}
+    
+    {{- if $widgetType -}}
+      {{- /* 构建 widget partial 路径 */ -}}
+      {{- $partialPath := printf "widgets/%s.html" $widgetType -}}
+      
+      {{- /* 检查 partial 是否存在 */ -}}
+      {{- if templates.Exists (printf "partials/%s" $partialPath) -}}
+        {{- partial $partialPath . -}}
+      {{- else -}}
+        <!-- Widget "{{ $widgetType }}" not found at partials/{{ $partialPath }} -->
+      {{- end -}}
+    {{- end -}}
+  {{- end -}}
+  
+  {{- /* 如果有 .Content，也渲染出来 */ -}}
+  {{- if .Content -}}
+  <section class="py-12 md:py-16 lg:py-20">
+    <div class="max-w-7xl mx-auto px-4 md:px-6">
+      <div class="prose prose-lg dark:prose-invert max-w-none">
+        {{ .Content }}
+      </div>
+    </div>
+  </section>
+  {{- end -}}
+
+{{- else -}}
+  {{- /* 文章模式：传统的博客文章布局 */ -}}
 <section class="py-8 sm:py-16 lg:py-20 mx-auto">
   <article>
     {{- /* 文章头部 */ -}}
@@ -137,4 +189,5 @@
     {{ partial "blog/related-posts.html" . }}
   </article>
 </section>
-{{- end }}
+{{- end -}}
+{{- end -}}

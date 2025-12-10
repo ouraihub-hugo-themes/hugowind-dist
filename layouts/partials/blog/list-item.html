@@ -1,0 +1,91 @@
+{{- /*
+  Blog List Item - 博客列表项组件
+  参考 AstroWind src/components/blog/ListItem.astro
+  
+  用于博客列表页的文章展示，支持图文并排布局
+*/ -}}
+
+{{- $hasImage := .Params.image }}
+{{- $link := .RelPermalink }}
+
+<article class="max-w-md mx-auto md:max-w-none grid gap-6 md:gap-8 {{ if $hasImage }}md:grid-cols-2{{ end }}">
+  {{- /* 封面图片 */ -}}
+  {{- if $hasImage }}
+  <a class="relative block group" href="{{ $link }}">
+    <div class="relative h-0 pb-[56.25%] md:pb-[75%] md:h-72 lg:pb-[56.25%] overflow-hidden bg-gray-400 dark:bg-slate-700 rounded shadow-lg">
+      <img src="{{ .Params.image }}" 
+           class="absolute inset-0 object-cover w-full h-full mb-6 rounded shadow-lg bg-gray-400 dark:bg-slate-700 transition-transform duration-300 group-hover:scale-105" 
+           alt="{{ .Title }}"
+           loading="lazy" 
+           decoding="async">
+    </div>
+  </a>
+  {{- end }}
+  
+  <div class="mt-2">
+    <header>
+      {{- /* 元信息 */ -}}
+      <div class="mb-1">
+        <span class="text-sm">
+          {{- /* 日期 */ -}}
+          <svg class="w-3.5 h-3.5 inline-block -mt-0.5 dark:text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+          </svg>
+          <time datetime="{{ .Date.Format "2006-01-02T15:04:05Z07:00" }}" class="inline-block">
+            {{ .Date.Format "Jan 02, 2006" }}
+          </time>
+          
+          {{- /* 作者 */ -}}
+          {{- with .Params.author }}
+          <span> · </span>
+          <svg class="w-3.5 h-3.5 inline-block -mt-0.5 dark:text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+          </svg>
+          <span>{{ replace . "-" " " }}</span>
+          {{- end }}
+          
+          {{- /* 分类 */ -}}
+          {{- with .Params.categories }}
+          {{- range first 1 . }}
+          <span> · </span>
+          <a class="hover:underline" href="{{ printf "/categories/%s/" (. | urlize) | relLangURL }}">
+            {{ . }}
+          </a>
+          {{- end }}
+          {{- end }}
+        </span>
+      </div>
+      
+      {{- /* 标题 */ -}}
+      <h2 class="text-xl sm:text-2xl font-bold leading-tight mb-2 font-heading dark:text-slate-300">
+        <a class="inline-block hover:text-primary dark:hover:text-blue-700 transition ease-in duration-200" href="{{ $link }}">
+          {{ .Title }}
+        </a>
+      </h2>
+    </header>
+    
+    {{- /* 摘要 */ -}}
+    {{- $excerpt := .Description | default .Summary }}
+    {{- if $excerpt }}
+    <p class="grow text-muted dark:text-slate-400 text-lg">
+      {{ $excerpt | truncate 200 }}
+    </p>
+    {{- end }}
+    
+    {{- /* 标签 */ -}}
+    {{- with .Params.tags }}
+    <footer class="mt-5">
+      <ul class="text-sm">
+        {{- range . }}
+        <li class="bg-gray-100 dark:bg-slate-700 inline-block mr-2 rtl:mr-0 rtl:ml-2 mb-2 py-0.5 px-2 lowercase font-medium">
+          <a href="{{ printf "/tags/%s/" (. | urlize) | relLangURL }}" 
+             class="text-muted dark:text-slate-300 hover:text-primary dark:hover:text-gray-200">
+            {{ . }}
+          </a>
+        </li>
+        {{- end }}
+      </ul>
+    </footer>
+    {{- end }}
+  </div>
+</article>

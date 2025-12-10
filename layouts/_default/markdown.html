@@ -1,0 +1,37 @@
+{{- /*
+  Markdown Layout - 纯 Markdown 内容布局模板
+  
+  用于隐私政策、服务条款等纯文本内容页面
+  
+  Requirements: 3.6, 3.7
+*/ -}}
+
+{{- define "main" -}}
+<section class="py-8 sm:py-16 lg:py-20 mx-auto">
+  <article>
+    {{- /* 页面头部 */ -}}
+    <header class="mb-8">
+      <h1 class="px-4 sm:px-6 max-w-3xl mx-auto text-4xl md:text-5xl font-bold leading-tighter tracking-tighter font-heading dark:text-slate-200">
+        {{ .Title }}
+      </h1>
+      
+      {{- with .Description }}
+      <p class="max-w-3xl mx-auto mt-4 mb-8 px-4 sm:px-6 text-xl md:text-2xl text-muted dark:text-slate-400">
+        {{ . }}
+      </p>
+      {{- end }}
+      
+      <div class="max-w-3xl mx-auto px-4 sm:px-6">
+        <div class="border-t dark:border-slate-700"></div>
+      </div>
+    </header>
+    
+    {{- /* Markdown 内容 */ -}}
+    <div class="max-w-3xl mx-auto px-4 sm:px-6">
+      <div class="prose prose-lg dark:prose-invert dark:prose-headings:text-slate-300 prose-headings:font-heading prose-headings:leading-tighter prose-headings:tracking-tighter prose-headings:font-bold prose-a:text-primary dark:prose-a:text-blue-400 max-w-none">
+        {{ .Content }}
+      </div>
+    </div>
+  </article>
+</section>
+{{- end -}}

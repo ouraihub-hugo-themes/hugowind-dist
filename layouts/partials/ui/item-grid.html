@@ -1,0 +1,78 @@
+{{- /*
+  ItemGrid 组件 - 复刻 AstroWind ItemGrid.astro
+  参考: astrowind/src/components/ui/ItemGrid.astro
+  
+  参数:
+    - items: 必需，项目数组
+      - title: 项目标题
+      - description: 项目描述
+      - icon: 图标名称
+      - callToAction: 可选，行动按钮配置
+    - columns: 可选，列数 (2, 3, 4)，默认自动
+    - defaultIcon: 可选，默认图标
+    - classes: 可选，自定义样式类
+      - container: 容器类
+      - panel: 面板类
+      - title: 标题类
+      - description: 描述类
+      - icon: 图标类
+      - action: 按钮类
+*/ -}}
+
+{{- $items := .items | default slice -}}
+{{- $columns := .columns | default 0 -}}
+{{- $defaultIcon := .defaultIcon | default "" -}}
+
+{{- /* 样式类配置 */ -}}
+{{- $classes := .classes | default dict -}}
+{{- $containerClass := $classes.container | default "" -}}
+{{- $panelClass := $classes.panel | default "" -}}
+{{- $titleClass := $classes.title | default "" -}}
+{{- $descriptionClass := $classes.description | default "text-muted" -}}
+{{- $iconClass := $classes.icon | default "mr-2 rtl:mr-0 rtl:ml-2 w-7 h-7 text-primary" -}}
+{{- $actionClass := $classes.action | default "" -}}
+
+{{- /* 根据列数生成网格类 */ -}}
+{{- $gridClass := "" -}}
+{{- if eq $columns 4 -}}
+  {{- $gridClass = "lg:grid-cols-4 md:grid-cols-3 sm:grid-cols-2" -}}
+{{- else if eq $columns 3 -}}
+  {{- $gridClass = "lg:grid-cols-3 sm:grid-cols-2" -}}
+{{- else if eq $columns 2 -}}
+  {{- $gridClass = "sm:grid-cols-2" -}}
+{{- end -}}
+
+{{- if and $items (gt (len $items) 0) -}}
+<div class="grid mx-auto {{ if not $containerClass }}gap-8 md:gap-y-12{{ end }} {{ $gridClass }} {{ $containerClass }}">
+  {{- range $items -}}
+    {{- $itemClasses := .classes | default dict -}}
+    {{- $icon := .icon | default $defaultIcon -}}
+  <div class="intersect-once motion-safe:md:opacity-0 motion-safe:md:intersect:animate-fade">
+    <div class="flex flex-row {{ if not $panelClass }}max-w-md{{ end }} {{ $panelClass }} {{ $itemClasses.panel | default "" }}">
+      {{- /* 图标区域 */ -}}
+      <div class="flex justify-center">
+        {{- with $icon -}}
+        {{- partial "ui/icon.html" (dict "name" . "class" (printf "%s %s" $iconClass ($itemClasses.icon | default ""))) -}}
+        {{- end -}}
+      </div>
+      {{- /* 内容区域 */ -}}
+      <div class="mt-0.5">
+        {{- with .title -}}
+        <h3 class="text-xl font-bold {{ $titleClass }} {{ $itemClasses.title | default "" }}">{{ . }}</h3>
+        {{- end -}}
+        {{- with .description -}}
+        <p class="{{ if $.title }}mt-3{{ end }} {{ $descriptionClass }} {{ $itemClasses.description | default "" }}">
+          {{ . | safeHTML }}
+        </p>
+        {{- end -}}
+        {{- with .callToAction -}}
+        <div class="{{ if or $.title $.description }}mt-3{{ end }} {{ $actionClass }} {{ $itemClasses.actionClass | default "" }}">
+          {{- partial "ui/button.html" (merge . (dict "variant" "link")) -}}
+        </div>
+        {{- end -}}
+      </div>
+    </div>
+  </div>
+  {{- end -}}
+</div>
+{{- end -}}

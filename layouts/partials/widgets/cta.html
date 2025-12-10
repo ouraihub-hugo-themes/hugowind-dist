@@ -1,0 +1,80 @@
+{{- /*
+  CallToAction Widget - 复刻 AstroWind CallToAction.astro
+  参考: astrowind/src/components/widgets/CallToAction.astro
+  
+  参数:
+    - id: 可选，section 的 ID
+    - isDark: 可选，是否使用暗色背景
+    - tagline: 可选，标签行
+    - title: 可选，主标题
+    - subtitle: 可选，副标题
+    - actions: 可选，按钮数组
+      - text: 按钮文本
+      - href: 链接地址
+      - variant: 按钮变体 (primary, secondary, tertiary, link)
+      - target: 链接目标 (_blank, _self)
+      - icon: 图标名称
+    - bg: 可选，自定义背景 HTML
+    - classes: 可选，自定义样式类
+  
+  Requirements: 1.9
+*/ -}}
+
+{{- $id := .id | default "" -}}
+{{- $isDark := .isDark | default false -}}
+{{- $tagline := .tagline | default "" -}}
+{{- $title := .title | default "" -}}
+{{- $subtitle := .subtitle | default "" -}}
+{{- $actions := .actions | default slice -}}
+{{- $bg := .bg | default "" -}}
+{{- $classes := .classes | default dict -}}
+
+{{- /* 构建容器类 */ -}}
+{{- $containerClass := printf "max-w-6xl %s" ($classes.container | default "") -}}
+
+<section class="relative not-prose scroll-mt-[72px]"{{ with $id }} id="{{ . }}"{{ end }}>
+  {{- /* 背景层 */ -}}
+  <div class="absolute inset-0 pointer-events-none -z-1" aria-hidden="true">
+    {{- if $bg -}}
+      {{ $bg | safeHTML }}
+    {{- else -}}
+      <div class="absolute inset-0{{ if $isDark }} bg-dark dark:bg-transparent{{ end }}"></div>
+    {{- end -}}
+  </div>
+  
+  {{- /* 内容容器 */ -}}
+  <div class="relative mx-auto px-4 md:px-6 py-12 md:py-16 lg:py-20 text-default intersect-once intersect-quarter intersect-no-queue motion-safe:md:opacity-0 motion-safe:md:intersect:animate-fade {{ $containerClass }}{{ if $isDark }} dark{{ end }}">
+    {{- /* CTA 卡片容器 */ -}}
+    <div class="max-w-3xl mx-auto text-center p-6 rounded-md shadow-xl dark:shadow-none dark:border dark:border-slate-600">
+      {{- /* Headline 部分 */ -}}
+      {{- partial "ui/headline.html" (dict 
+        "title" $title 
+        "subtitle" $subtitle 
+        "tagline" $tagline
+        "classes" (dict 
+          "container" "mb-0 md:mb-0"
+          "title" "text-4xl md:text-4xl mb-4"
+          "subtitle" "dark:text-slate-400"
+        )
+      ) -}}
+      
+      {{- /* Actions 按钮组 */ -}}
+      {{- if $actions -}}
+      <div class="max-w-xs sm:max-w-md m-auto flex flex-nowrap flex-col sm:flex-row sm:justify-center gap-4 mt-6">
+        {{- range $actions -}}
+        <div class="flex w-full sm:w-auto">
+          {{- partial "ui/button.html" (dict 
+            "text" .text 
+            "href" .href 
+            "variant" (.variant | default "secondary") 
+            "target" .target 
+            "icon" .icon 
+            "class" "w-full sm:mb-0"
+          ) -}}
+        </div>
+        {{- end -}}
+      </div>
+      {{- end -}}
+    </div>
+  </div>
+</section>

@@ -1,0 +1,52 @@
+{{- /*
+  Headline 组件 - 复刻 AstroWind Headline.astro
+  参考: astrowind/src/components/ui/Headline.astro
+  
+  参数:
+    - title: 可选，主标题
+    - subtitle: 可选，副标题
+    - tagline: 可选，标签行
+    - classes: 可选，自定义样式类
+      - container: 容器类，默认 "max-w-3xl"
+      - title: 标题类，默认 "text-3xl md:text-4xl"
+      - subtitle: 副标题类，默认 "text-xl"
+*/ -}}
+
+{{- $title := .title | default "" -}}
+{{- $subtitle := .subtitle | default "" -}}
+{{- $tagline := .tagline | default "" -}}
+
+{{- /* 样式类配置 */ -}}
+{{- $classes := .classes | default dict -}}
+{{- $containerClass := $classes.container | default "max-w-3xl" -}}
+{{- $titleClass := $classes.title | default "text-3xl md:text-4xl" -}}
+{{- $subtitleClass := $classes.subtitle | default "text-xl" -}}
+
+{{- /* 检查是否需要移除默认 margin */ -}}
+{{- $hasCustomMargin := or (in $containerClass "mb-") (in $containerClass "my-") -}}
+{{- $marginClass := cond $hasCustomMargin "" "mb-8 md:mb-12" -}}
+
+{{- if or $title $subtitle $tagline -}}
+<div class="md:mx-auto text-center {{ $marginClass }} {{ $containerClass }}">
+  {{- /* Tagline - 标签行 */ -}}
+  {{- with $tagline -}}
+  <p class="text-base text-secondary dark:text-blue-200 font-bold tracking-wide uppercase">
+    {{ . | safeHTML }}
+  </p>
+  {{- end -}}
+  
+  {{- /* Title - 主标题 */ -}}
+  {{- with $title -}}
+  <h2 class="font-bold leading-tighter tracking-tighter font-heading text-heading {{ $titleClass }}">
+    {{ . | safeHTML }}
+  </h2>
+  {{- end -}}
+  
+  {{- /* Subtitle - 副标题 */ -}}
+  {{- with $subtitle -}}
+  <p class="mt-4 text-muted {{ $subtitleClass }}">
+    {{ . | safeHTML }}
+  </p>
+  {{- end -}}
+</div>
+{{- end -}}

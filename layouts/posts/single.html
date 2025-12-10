@@ -1,0 +1,111 @@
+{{- /*
+  Blog Single Post Layout - 博客文章详情布局
+  参考 AstroWind src/components/blog/SinglePost.astro
+  
+  Requirements: 6.2
+*/ -}}
+
+{{- define "main" }}
+<section class="py-8 sm:py-16 lg:py-20 mx-auto">
+  <article>
+    {{- /* 文章头部 */ -}}
+    <header class="intersect-once intersect-quarter">
+      {{- /* 元信息：日期、作者、分类、阅读时间 */ -}}
+      <div class="flex justify-between flex-col sm:flex-row max-w-3xl mx-auto mt-0 mb-2 px-4 sm:px-6 sm:items-center">
+        <p>
+          {{- /* 日期 */ -}}
+          <svg class="w-4 h-4 inline-block -mt-0.5 dark:text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+          </svg>
+          <time datetime="{{ .Date.Format "2006-01-02T15:04:05Z07:00" }}" class="inline-block">
+            {{ .Date.Format "Jan 02, 2006" }}
+          </time>
+          
+          {{- /* 作者 */ -}}
+          {{- with .Params.author }}
+          <span> · </span>
+          <svg class="w-4 h-4 inline-block -mt-0.5 dark:text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+          </svg>
+          <span class="inline-block">{{ replace . "-" " " }}</span>
+          {{- end }}
+          
+          {{- /* 分类 */ -}}
+          {{- with .Params.categories }}
+          {{- range first 1 . }}
+          <span> · </span>
+          <a class="hover:underline inline-block" href="{{ printf "/categories/%s/" (. | urlize) | relLangURL }}">
+            {{ . }}
+          </a>
+          {{- end }}
+          {{- end }}
+          
+          {{- /* 阅读时间 */ -}}
+          {{- if gt .ReadingTime 0 }}
+          <span> · </span>
+          <span>{{ .ReadingTime }} {{ i18n "min_read" | default "min read" }}</span>
+          {{- end }}
+        </p>
+      </div>
+      
+      {{- /* 标题 */ -}}
+      <h1 class="px-4 sm:px-6 max-w-3xl mx-auto text-4xl md:text-5xl font-bold leading-tighter tracking-tighter font-heading dark:text-slate-200">
+        {{ .Title }}
+      </h1>
+      
+      {{- /* 摘要/描述 */ -}}
+      {{- with .Description }}
+      <p class="max-w-3xl mx-auto mt-4 mb-8 px-4 sm:px-6 text-xl md:text-2xl text-muted dark:text-slate-400 text-justify">
+        {{ . }}
+      </p>
+      {{- end }}
+      
+      {{- /* 封面图片 */ -}}
+      {{- with .Params.image }}
+      <img src="{{ . }}" 
+           class="max-w-full lg:max-w-[900px] mx-auto mb-6 sm:rounded-md bg-gray-400 dark:bg-slate-700" 
+           alt="{{ $.Description | default $.Title }}"
+           width="900"
+           height="506"
+           loading="eager" 
+           decoding="async">
+      {{- else }}
+      <div class="max-w-3xl mx-auto px-4 sm:px-6">
+        <div class="border-t dark:border-slate-700"></div>
+      </div>
+      {{- end }}
+    </header>
+    
+    {{- /* 文章正文 */ -}}
+    <div class="mx-auto px-6 sm:px-6 max-w-3xl prose prose-md lg:prose-xl dark:prose-invert dark:prose-headings:text-slate-300 prose-headings:font-heading prose-headings:leading-tighter prose-headings:tracking-tighter prose-headings:font-bold prose-a:text-primary dark:prose-a:text-blue-400 prose-img:rounded-md prose-img:shadow-lg mt-8 prose-headings:scroll-mt-[80px] prose-li:my-0">
+      {{ .Content }}
+    </div>
+    
+    {{- /* 标签和分享 */ -}}
+    <div class="mx-auto px-6 sm:px-6 max-w-3xl mt-8 flex justify-between flex-col sm:flex-row">
+      {{- /* 标签 */ -}}
+      {{- with .Params.tags }}
+      <ul class="text-sm mr-5 rtl:mr-0 rtl:ml-5">
+        {{- range . }}
+        <li class="bg-gray-100 dark:bg-slate-700 inline-block mr-2 rtl:mr-0 rtl:ml-2 mb-2 py-0.5 px-2 lowercase font-medium">
+          <a href="{{ printf "/tags/%s/" (. | urlize) | relLangURL }}" 
+             class="text-muted dark:text-slate-300 hover:text-primary dark:hover:text-gray-200">
+            {{ . }}
+          </a>
+        </li>
+        {{- end }}
+      </ul>
+      {{- end }}
+      
+      {{- /* 社交分享 */ -}}
+      {{ partial "blog/social-share.html" . }}
+    </div>
+  </article>
+</section>
+
+{{- /* 返回博客链接 */ -}}
+{{ partial "blog/to-blog-link.html" . }}
+
+{{- /* 相关文章 */ -}}
+{{ partial "blog/related-posts.html" . }}
+{{- end }}

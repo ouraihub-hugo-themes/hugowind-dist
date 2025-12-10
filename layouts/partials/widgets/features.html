@@ -1,0 +1,67 @@
+{{- /*
+  Features Widget - 复刻 AstroWind Features.astro
+  参考: astrowind/src/components/widgets/Features.astro
+  
+  参数:
+    - id: 可选，section 的 ID
+    - isDark: 可选，是否使用暗色背景
+    - tagline: 可选，标签行
+    - title: 可选，主标题
+    - subtitle: 可选，副标题
+    - items: 必需，功能项数组
+      - title: 项目标题
+      - description: 项目描述
+      - icon: 图标名称
+    - columns: 可选，列数 (2, 3, 4)，默认 2
+    - defaultIcon: 可选，默认图标
+    - classes: 可选，自定义样式类
+*/ -}}
+
+{{- $id := .id | default "" -}}
+{{- $isDark := .isDark | default false -}}
+{{- $tagline := .tagline | default "" -}}
+{{- $title := .title | default "" -}}
+{{- $subtitle := .subtitle | default "" -}}
+{{- $items := .items | default slice -}}
+{{- $columns := .columns | default 2 -}}
+{{- $defaultIcon := .defaultIcon | default "" -}}
+{{- $classes := .classes | default dict -}}
+
+{{- /* 构建容器类 */ -}}
+{{- $containerClass := printf "max-w-5xl %s" ($classes.container | default "") -}}
+
+{{- /* ItemGrid 样式类配置 */ -}}
+{{- $itemGridClasses := dict 
+  "container" ""
+  "title" "md:text-[1.3rem]"
+  "icon" "text-white bg-primary rounded-full w-10 h-10 p-2 md:w-12 md:h-12 md:p-3 mr-4 rtl:ml-4 rtl:mr-0"
+-}}
+{{- with $classes.items -}}
+  {{- $itemGridClasses = merge $itemGridClasses . -}}
+{{- end -}}
+
+<section class="relative not-prose scroll-mt-[72px]"{{ with $id }} id="{{ . }}"{{ end }}>
+  {{- /* 背景层 */ -}}
+  <div class="absolute inset-0 pointer-events-none -z-1" aria-hidden="true">
+    <div class="absolute inset-0{{ if $isDark }} bg-dark dark:bg-transparent{{ end }}"></div>
+  </div>
+  
+  {{- /* 内容容器 */ -}}
+  <div class="relative mx-auto px-4 md:px-6 py-12 md:py-16 lg:py-20 text-default intersect-once intersect-quarter intersect-no-queue motion-safe:md:opacity-0 motion-safe:md:intersect:animate-fade {{ $containerClass }}{{ if $isDark }} dark{{ end }}">
+    {{- /* Headline 部分 */ -}}
+    {{- partial "ui/headline.html" (dict 
+      "title" $title 
+      "subtitle" $subtitle 
+      "tagline" $tagline
+      "classes" ($classes.headline | default dict)
+    ) -}}
+    
+    {{- /* ItemGrid 部分 */ -}}
+    {{- partial "ui/item-grid.html" (dict 
+      "items" $items 
+      "columns" $columns 
+      "defaultIcon" $defaultIcon
+      "classes" $itemGridClasses
+    ) -}}
+  </div>
+</section>

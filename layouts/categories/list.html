@@ -1,0 +1,58 @@
+{{- /*
+  Category List Layout - 分类列表布局
+  参考 AstroWind src/pages/[...blog]/[category]/[...page].astro
+  
+  Requirements: 6.3
+*/ -}}
+
+{{- define "main" }}
+<section class="px-4 md:px-6 py-12 sm:py-16 lg:py-20 mx-auto max-w-4xl">
+  {{- /* 页面标题区域 */ -}}
+  <header class="mb-8 md:mb-16 text-center max-w-3xl mx-auto">
+    <p class="text-base text-secondary dark:text-blue-200 font-bold tracking-wide uppercase mb-2">
+      {{ i18n "category" | default "Category" }}
+    </p>
+    <h1 class="text-4xl md:text-5xl font-bold leading-tighter tracking-tighter font-heading dark:text-slate-200">
+      {{ .Title }}
+    </h1>
+    <p class="mt-4 text-xl text-muted dark:text-slate-400">
+      {{ i18n "posts_count" (len .Pages) | default (printf "%d posts in this category" (len .Pages)) }}
+    </p>
+  </header>
+  
+  {{- /* 所有分类导航 */ -}}
+  <div class="mb-12 flex flex-wrap justify-center gap-3">
+    {{- range $name, $items := site.Taxonomies.categories }}
+    {{- $isActive := eq $name $.Title }}
+    <a href="{{ printf "/categories/%s/" ($name | urlize) | relLangURL }}" 
+       class="inline-flex items-center px-4 py-2 text-sm rounded-full transition {{ if $isActive }}bg-primary text-white dark:bg-blue-600{{ else }}bg-gray-100 dark:bg-slate-700 text-muted dark:text-slate-300 hover:text-primary dark:hover:text-blue-400{{ end }}">
+      {{ $name }}
+      <span class="ml-2 px-2 py-0.5 text-xs rounded-full {{ if $isActive }}bg-white/20{{ else }}bg-gray-200 dark:bg-slate-600{{ end }}">
+        {{ len $items }}
+      </span>
+    </a>
+    {{- end }}
+  </div>
+  
+  {{- /* 文章列表 */ -}}
+  {{- $paginator := .Paginate .Pages }}
+  {{- if gt (len $paginator.Pages) 0 }}
+  <ul>
+    {{- range $paginator.Pages }}
+    <li class="mb-12 md:mb-20">
+      {{ partial "blog/list-item.html" . }}
+    </li>
+    {{- end }}
+  </ul>
+  
+  {{- /* 分页 */ -}}
+  {{ partial "blog/pagination.html" . }}
+  {{- else }}
+  <div class="text-center py-12">
+    <p class="text-xl text-muted dark:text-slate-400">
+      {{ i18n "no_posts" | default "No posts found." }}
+    </p>
+  </div>
+  {{- end }}
+</section>
+{{- end }}

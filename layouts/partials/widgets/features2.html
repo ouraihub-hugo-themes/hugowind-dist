@@ -1,0 +1,72 @@
+{{- /*
+  Features2 Widget - 复刻 AstroWind Features2.astro
+  参考: astrowind/src/components/widgets/Features2.astro
+  
+  与 Features 的区别:
+  - 使用 ItemGrid2 (卡片式布局)
+  - 默认 3 列
+  - 带阴影和玻璃态背景的卡片
+  
+  参数:
+    - id: 可选，section 的 ID
+    - isDark: 可选，是否使用暗色背景
+    - tagline: 可选，标签行
+    - title: 可选，主标题
+    - subtitle: 可选，副标题
+    - items: 必需，功能项数组
+      - title: 项目标题
+      - description: 项目描述
+      - icon: 图标名称
+    - columns: 可选，列数 (2, 3, 4)，默认 3
+    - defaultIcon: 可选，默认图标
+    - classes: 可选，自定义样式类
+*/ -}}
+
+{{- $id := .id | default "" -}}
+{{- $isDark := .isDark | default false -}}
+{{- $tagline := .tagline | default "" -}}
+{{- $title := .title | default "" -}}
+{{- $subtitle := .subtitle | default "" -}}
+{{- $items := .items | default slice -}}
+{{- $columns := .columns | default 3 -}}
+{{- $defaultIcon := .defaultIcon | default "" -}}
+{{- $classes := .classes | default dict -}}
+
+{{- /* 构建容器类 - 注意：外层容器已有 max-w-7xl mx-auto，这里只添加额外的类 */ -}}
+{{- $containerClass := $classes.container | default "" -}}
+
+{{- /* ItemGrid2 样式类配置 - 卡片式布局 */ -}}
+{{- $itemGridClasses := dict 
+  "container" "gap-4 md:gap-6"
+  "panel" "rounded-lg shadow-[0_4px_30px_rgba(0,0,0,0.1)] dark:shadow-[0_4px_30px_rgba(0,0,0,0.1)] backdrop-blur border border-[#ffffff29] bg-white dark:bg-slate-900 p-6"
+  "icon" "w-12 h-12 mb-6 text-primary"
+-}}
+{{- with $classes.items -}}
+  {{- $itemGridClasses = merge $itemGridClasses . -}}
+{{- end -}}
+
+<section class="relative not-prose scroll-mt-[72px]"{{ with $id }} id="{{ . }}"{{ end }}>
+  {{- /* 背景层 */ -}}
+  <div class="absolute inset-0 pointer-events-none -z-1" aria-hidden="true">
+    <div class="absolute inset-0{{ if $isDark }} bg-dark dark:bg-transparent{{ end }}"></div>
+  </div>
+  
+  {{- /* 内容容器 */ -}}
+  <div class="relative mx-auto max-w-7xl px-4 md:px-6 py-12 md:py-16 lg:py-20 text-default intersect-once intersect-quarter intersect-no-queue motion-safe:md:opacity-0 motion-safe:md:intersect:animate-fade {{ $containerClass }}{{ if $isDark }} dark{{ end }}">
+    {{- /* Headline 部分 */ -}}
+    {{- partial "ui/headline.html" (dict 
+      "title" $title 
+      "subtitle" $subtitle 
+      "tagline" $tagline
+      "classes" ($classes.headline | default dict)
+    ) -}}
+    
+    {{- /* ItemGrid2 部分 - 卡片式布局 */ -}}
+    {{- partial "ui/item-grid2.html" (dict 
+      "items" $items 
+      "columns" $columns 
+      "defaultIcon" $defaultIcon
+      "classes" $itemGridClasses
+    ) -}}
+  </div>
+</section>

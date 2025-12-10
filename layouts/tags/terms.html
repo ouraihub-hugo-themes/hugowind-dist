@@ -1,0 +1,49 @@
+{{- /*
+  Tags Terms Layout - 所有标签列表布局
+  显示所有标签的索引页
+  
+  Requirements: 6.4
+*/ -}}
+
+{{- define "main" }}
+<section class="px-4 sm:px-6 py-12 sm:py-16 lg:py-20 mx-auto max-w-7xl">
+  {{- /* 页面标题区域 */ -}}
+  <header class="mb-12 md:mb-16 text-center">
+    <h1 class="text-4xl md:text-5xl font-bold leading-tighter tracking-tighter font-heading dark:text-slate-200">
+      {{ i18n "tags" | default "Tags" }}
+    </h1>
+    <p class="mt-4 text-xl text-muted dark:text-slate-400">
+      {{ i18n "browse_tags" | default "Browse all tags" }}
+    </p>
+  </header>
+  
+  {{- /* 标签云 */ -}}
+  {{- $terms := .Data.Terms.ByCount }}
+  
+  {{- if gt (len $terms) 0 }}
+  <div class="flex flex-wrap justify-center gap-3 max-w-4xl mx-auto">
+    {{- range $terms }}
+    <a href="{{ .Page.RelPermalink }}" 
+       class="group inline-flex items-center px-4 py-2 bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-lg hover:shadow-md hover:border-primary dark:hover:border-blue-500 transition">
+      {{- /* 标签图标 */ -}}
+      <svg class="w-4 h-4 mr-2 text-muted dark:text-slate-500 group-hover:text-primary dark:group-hover:text-blue-400 transition" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"></path>
+      </svg>
+      <span class="dark:text-slate-200 group-hover:text-primary dark:group-hover:text-blue-400 transition">
+        {{ .Page.Title }}
+      </span>
+      <span class="ml-2 px-2 py-0.5 text-xs bg-gray-100 dark:bg-slate-700 text-muted dark:text-slate-400 rounded-full">
+        {{ .Count }}
+      </span>
+    </a>
+    {{- end }}
+  </div>
+  {{- else }}
+  <div class="text-center py-12">
+    <p class="text-xl text-muted dark:text-slate-400">
+      {{ i18n "no_tags" | default "No tags found." }}
+    </p>
+  </div>
+  {{- end }}
+</section>
+{{- end }}

@@ -1,0 +1,14 @@
+{{- /*
+  To Blog Link - 返回博客链接组件
+  参考 AstroWind src/components/blog/ToBlogLink.astro
+*/ -}}
+
+<div class="mx-auto px-6 sm:px-6 max-w-3xl mt-8 pt-8 border-t dark:border-slate-700">
+  <a href="{{ "/posts/" | relLangURL }}" 
+     class="inline-flex items-center text-muted dark:text-slate-400 hover:text-primary dark:hover:text-blue-400 transition">
+    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+    </svg>
+    {{ i18n "back_to_blog" | default "Back to Blog" }}
+  </a>
+</div>

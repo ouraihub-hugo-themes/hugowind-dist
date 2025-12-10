@@ -1,0 +1,107 @@
+{{- /*
+  Steps2 Widget - 复刻 AstroWind Steps2.astro
+  参考: astrowind/src/components/widgets/Steps2.astro
+  
+  参数:
+    - id: 可选，section 的 ID
+    - isDark: 可选，是否使用暗色背景
+    - tagline: 可选，标签行
+    - title: 可选，主标题
+    - subtitle: 可选，副标题
+    - items: 必需，步骤项数组
+      - title: 项目标题
+      - description: 项目描述
+      - icon: 图标名称（可选，不提供则显示序号）
+    - callToAction: 可选，行动按钮配置
+      - text: 按钮文本
+      - href: 链接地址
+      - target: 链接目标
+    - isReversed: 可选，是否反向布局
+    - classes: 可选，自定义样式类
+*/ -}}
+
+{{- $id := .id | default "" -}}
+{{- $isDark := .isDark | default false -}}
+{{- $tagline := .tagline | default "" -}}
+{{- $title := .title | default "" -}}
+{{- $subtitle := .subtitle | default "" -}}
+{{- $items := .items | default slice -}}
+{{- $callToAction := .callToAction | default dict -}}
+{{- $isReversed := .isReversed | default false -}}
+{{- $classes := .classes | default dict -}}
+
+{{- /* 构建容器类 - 注意：外层容器已有 mx-auto，这里只设置 max-w */ -}}
+{{- $containerClass := printf "max-w-6xl %s" ($classes.container | default "") -}}
+
+<section class="relative not-prose scroll-mt-[72px]"{{ with $id }} id="{{ . }}"{{ end }}>
+  {{- /* 背景层 */ -}}
+  <div class="absolute inset-0 pointer-events-none -z-1" aria-hidden="true">
+    <div class="absolute inset-0{{ if $isDark }} bg-dark dark:bg-transparent{{ end }}"></div>
+  </div>
+  
+  {{- /* 内容容器 */ -}}
+  <div class="relative mx-auto px-4 md:px-6 py-12 md:py-16 lg:py-20 text-default intersect-once intersect-quarter intersect-no-queue motion-safe:md:opacity-0 motion-safe:md:intersect:animate-fade {{ $containerClass }}{{ if $isDark }} dark{{ end }}">
+    {{- /* Flex 容器 */ -}}
+    <div class="flex flex-col gap-8 md:gap-12 md:flex-row{{ if $isReversed }} md:flex-row-reverse{{ end }}">
+      {{- /* 左侧内容区 */ -}}
+      <div class="w-full lg:w-1/2 gap-8 md:gap-12{{ if $isReversed }} lg:ml-16 md:ml-8 ml-0{{ else }} lg:mr-16 md:mr-8 mr-0{{ end }}">
+        {{- /* Headline 部分 */ -}}
+        {{- partial "ui/headline.html" (dict 
+          "title" $title 
+          "subtitle" $subtitle 
+          "tagline" $tagline
+          "classes" (dict 
+            "container" "md:text-left rtl:md:text-right"
+            "title" "text-3xl lg:text-4xl"
+            "subtitle" "dark:text-slate-400"
+          )
+        ) -}}
+        
+        {{- /* Call to Action 按钮 */ -}}
+        {{- if and $callToAction.text $callToAction.href -}}
+        <div class="w-full text-center md:text-left rtl:md:text-right">
+          {{- partial "ui/button.html" (dict 
+            "variant" "primary"
+            "text" $callToAction.text
+            "href" $callToAction.href
+            "target" ($callToAction.target | default "")
+            "icon" ($callToAction.icon | default "")
+            "class" "mb-12 w-auto"
+          ) -}}
+        </div>
+        {{- end -}}
+      </div>
+      
+      {{- /* 右侧步骤列表 */ -}}
+      <div class="w-full lg:w-1/2 px-0">
+        {{- if and $items (gt (len $items) 0) -}}
+        <ul class="space-y-10">
+          {{- range $index, $item := $items -}}
+          <li class="flex md:-mx-4">
+            {{- /* 左侧图标/序号 */ -}}
+            <div class="pr-4 sm:pl-4 rtl:pr-0 rtl:pl-4 rtl:sm:pl-0 rtl:sm:pr-4">
+              <span class="flex w-16 h-16 mx-auto items-center justify-center text-2xl font-bold rounded-full bg-blue-100 text-primary">
+                {{- if $item.icon -}}
+                  {{- partial "ui/icon.html" (dict "name" $item.icon "class" "w-6 h-6 icon-bold") -}}
+                {{- else -}}
+                  {{ add $index 1 }}
+                {{- end -}}
+              </span>
+            </div>
+            {{- /* 右侧内容 */ -}}
+            <div class="pl-4 rtl:pl-0 rtl:pr-4">
+              {{- with $item.title -}}
+              <h3 class="mb-4 text-xl font-semibold font-heading">{{ . | safeHTML }}</h3>
+              {{- end -}}
+              {{- with $item.description -}}
+              <p class="text-muted dark:text-gray-400">{{ . | safeHTML }}</p>
+              {{- end -}}
+            </div>
+          </li>
+          {{- end -}}
+        </ul>
+        {{- end -}}
+      </div>
+    </div>
+  </div>
+</section>

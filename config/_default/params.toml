@@ -25,8 +25,8 @@ keywords = ["Hugo", "Theme", "Blog", "Tailwind CSS", "Starter"]
       width = 1200
       height = 628
   [metadata.twitter]
-    handle = "@onwidget"
-    site = "@onwidget"
+    handle = "@OurAiHub"
+    site = "@OurAiHub"
     cardType = "summary_large_image"
 
 # 国际化配置 - 与 AstroWind i18n 对应
@@ -91,7 +91,7 @@ keywords = ["Hugo", "Theme", "Blog", "Tailwind CSS", "Starter"]
   # image = "images/hero-image.png"  # 可选的 Hero 图片
   [hero.primaryCTA]
     text = "Get template"
-    link = "https://github.com/onwidget/astrowind"
+    link = "https://github.com/ouraihub-hugo-themes/hugowind-dist"
     icon = "tabler:download"
   [hero.secondaryCTA]
     text = "Learn more"
@@ -99,12 +99,12 @@ keywords = ["Hugo", "Theme", "Blog", "Tailwind CSS", "Starter"]
 
 # 社交链接
 [social]
-  github = "https://github.com/onwidget/astrowind"
-  twitter = "https://twitter.com/onwidget"
+  github = "https://github.com/ouraihub-hugo-themes/hugowind-dist"
+  twitter = "https://twitter.com/OurAiHub"
 
 # 页脚配置
 [footer]
-  copyright = "Made by onWidget · All rights reserved."
+  copyright = "Made by OurAiHub · All rights reserved."
   poweredBy = true
 
 # CDN 配置 - 需求: 5.2

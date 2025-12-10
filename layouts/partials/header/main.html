@@ -5,7 +5,7 @@
 
 <header 
   id="header" 
-  class="{{ if $isSticky }}sticky{{ else }}relative{{ end }} top-0 z-40 flex-none mx-auto w-full border-b border-gray-50/0 transition-opacity ease-in-out"
+  class="{{ if $isSticky }}sticky{{ else }}relative{{ end }} top-0 z-40 flex-none w-full border-b border-gray-50/0 transition-opacity ease-in-out"
   {{ if $isSticky }}data-aw-sticky-header{{ end }}
 >
   <div class="absolute inset-0"></div>
@@ -50,7 +50,12 @@
               {{- range .Children }}
               {{- $childActive := eq .URL $currentPath -}}
               <li>
-                <a class="first:rounded-t last:rounded-b md:hover:bg-gray-100 hover:text-link dark:hover:text-white dark:hover:bg-gray-700 py-2 px-5 block whitespace-nowrap{{ if $childActive }} aw-link-active{{ end }}" href="{{ .URL }}">
+                {{- /* 处理锚点链接：如果是 /#xxx 格式，自动添加语言前缀 */ -}}
+                {{- $menuURL := .URL -}}
+                {{- if hasPrefix $menuURL "/#" -}}
+                  {{- $menuURL = printf "%s%s" ($.Site.Home.RelPermalink | strings.TrimSuffix "/") $menuURL -}}
+                {{- end -}}
+                <a class="first:rounded-t last:rounded-b md:hover:bg-gray-100 hover:text-link dark:hover:text-white dark:hover:bg-gray-700 py-2 px-5 block whitespace-nowrap{{ if $childActive }} aw-link-active{{ end }}" href="{{ $menuURL }}">
                   {{ .Name }}
                 </a>
               </li>

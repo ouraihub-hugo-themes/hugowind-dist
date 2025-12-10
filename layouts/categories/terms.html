@@ -1,0 +1,55 @@
+{{- /*
+  Categories Terms Layout - 所有分类列表布局
+  显示所有分类的索引页
+  
+  Requirements: 6.3
+*/ -}}
+
+{{- define "main" }}
+<section class="px-4 sm:px-6 py-12 sm:py-16 lg:py-20 mx-auto max-w-7xl">
+  {{- /* 页面标题区域 */ -}}
+  <header class="mb-12 md:mb-16 text-center">
+    <h1 class="text-4xl md:text-5xl font-bold leading-tighter tracking-tighter font-heading dark:text-slate-200">
+      {{ i18n "categories" | default "Categories" }}
+    </h1>
+    <p class="mt-4 text-xl text-muted dark:text-slate-400">
+      {{ i18n "browse_categories" | default "Browse all categories" }}
+    </p>
+  </header>
+  
+  {{- /* 分类网格 */ -}}
+  {{- $terms := .Data.Terms.ByCount }}
+  
+  {{- if gt (len $terms) 0 }}
+  <div class="grid gap-4 grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
+    {{- range $terms }}
+    <a href="{{ .Page.RelPermalink }}" 
+       class="group flex flex-col items-center p-6 bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-xl hover:shadow-lg hover:border-primary dark:hover:border-blue-500 transition">
+      {{- /* 图标 */ -}}
+      <div class="w-12 h-12 mb-3 flex items-center justify-center rounded-full bg-gray-100 dark:bg-slate-700 group-hover:bg-primary/10 dark:group-hover:bg-blue-500/20 transition">
+        <svg class="w-6 h-6 text-muted dark:text-slate-400 group-hover:text-primary dark:group-hover:text-blue-400 transition" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path>
+        </svg>
+      </div>
+      
+      {{- /* 名称 */ -}}
+      <h2 class="text-lg font-semibold text-center dark:text-slate-200 group-hover:text-primary dark:group-hover:text-blue-400 transition">
+        {{ .Page.Title }}
+      </h2>
+      
+      {{- /* 文章数量 */ -}}
+      <span class="mt-1 text-sm text-muted dark:text-slate-400">
+        {{ i18n "posts_count" .Count | default (printf "%d posts" .Count) }}
+      </span>
+    </a>
+    {{- end }}
+  </div>
+  {{- else }}
+  <div class="text-center py-12">
+    <p class="text-xl text-muted dark:text-slate-400">
+      {{ i18n "no_categories" | default "No categories found." }}
+    </p>
+  </div>
+  {{- end }}
+</section>
+{{- end }}

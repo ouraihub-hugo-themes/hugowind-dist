@@ -1,0 +1,53 @@
+{{- /*
+  Button 组件 - 复刻 AstroWind Button.astro
+  参考: astrowind/src/components/ui/Button.astro
+  
+  参数:
+    - variant: 可选，按钮变体 (primary, secondary, tertiary, link)，默认 "secondary"
+    - text: 必需，按钮文本
+    - href: 可选，链接地址
+    - target: 可选，链接目标 (_blank, _self)
+    - icon: 可选，图标名称
+    - class: 可选，额外的 CSS 类
+    - type: 可选，按钮类型 (button, submit, reset)
+*/ -}}
+
+{{- $variant := .variant | default "secondary" -}}
+{{- $text := .text | default "" -}}
+{{- $href := .href | default "" -}}
+{{- $target := .target | default "" -}}
+{{- $icon := .icon | default "" -}}
+{{- $class := .class | default "" -}}
+{{- $type := .type | default "" -}}
+
+{{- /* 变体样式映射 - btn 是基础类，必须包含 */ -}}
+{{- $variantClass := "" -}}
+{{- if eq $variant "primary" -}}
+  {{- $variantClass = "btn btn-primary" -}}
+{{- else if eq $variant "secondary" -}}
+  {{- $variantClass = "btn btn-secondary" -}}
+{{- else if eq $variant "tertiary" -}}
+  {{- $variantClass = "btn btn-tertiary" -}}
+{{- else if eq $variant "link" -}}
+  {{- $variantClass = "cursor-pointer hover:text-primary" -}}
+{{- end -}}
+
+{{- $finalClass := printf "%s %s" $variantClass $class -}}
+
+{{- if or (eq $type "button") (eq $type "submit") (eq $type "reset") -}}
+  {{- /* 渲染为 button 元素 */ -}}
+  <button type="{{ $type }}" class="{{ $finalClass }}">
+    {{ $text | safeHTML }}
+    {{- with $icon -}}
+    {{- partial "ui/icon.html" (dict "name" . "class" "w-5 h-5 ml-1 -mr-1.5 rtl:mr-1 rtl:-ml-1.5 inline-block") -}}
+    {{- end -}}
+  </button>
+{{- else -}}
+  {{- /* 渲染为 a 元素 */ -}}
+  <a class="{{ $finalClass }}" href="{{ $href }}"{{ if $target }} target="{{ $target }}" rel="noopener noreferrer"{{ end }}>
+    {{ $text | safeHTML }}
+    {{- with $icon -}}
+    {{- partial "ui/icon.html" (dict "name" . "class" "w-5 h-5 ml-1 -mr-1.5 rtl:mr-1 rtl:-ml-1.5 inline-block") -}}
+    {{- end -}}
+  </a>
+{{- end -}}

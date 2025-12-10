@@ -1,0 +1,138 @@
+{{- /*
+  Hero Widget - 复刻 AstroWind Hero.astro
+  参考: astrowind/src/components/widgets/Hero.astro
+  
+  参数 (从 Front Matter sections 传入):
+    - id: 可选，section 的 ID
+    - tagline: 可选，标签行文本
+    - title: 必需，主标题 (支持 HTML)
+    - subtitle: 可选，副标题
+    - content: 可选，额外内容
+    - actions: 可选，按钮数组
+      - text: 按钮文本
+      - href: 链接地址
+      - variant: 按钮变体 (primary, secondary, tertiary, link)
+      - target: 链接目标 (_blank, _self)
+      - icon: 图标名称
+    - image: 可选，图片配置
+      - src: 图片路径
+      - alt: 替代文本
+    - bg: 可选，自定义背景 HTML
+  
+  Requirements: 1.1
+*/ -}}
+
+{{- $id := .id | default "" -}}
+{{- $tagline := .tagline | default "" -}}
+{{- $title := .title | default "" -}}
+{{- $subtitle := .subtitle | default "" -}}
+{{- $content := .content | default "" -}}
+{{- $actions := .actions | default slice -}}
+{{- $image := .image | default dict -}}
+{{- $bg := .bg | default "" -}}
+
+<section class="relative md:-mt-[76px] not-prose"{{ with $id }} id="{{ . }}"{{ end }}>
+  {{- /* 背景层 */ -}}
+  <div class="absolute inset-0 pointer-events-none" aria-hidden="true">
+    {{- if $bg -}}
+      {{ $bg | safeHTML }}
+    {{- else -}}
+      {{- /* 默认背景装饰 - 渐变和 blob 动画 */ -}}
+      <div class="absolute inset-0 bg-linear-to-br from-blue-50 via-white to-cyan-50 dark:from-slate-900 dark:via-slate-900 dark:to-slate-800"></div>
+      <div class="absolute inset-0 overflow-hidden">
+        <div class="absolute -top-40 -right-32 w-80 h-80 bg-linear-to-br from-blue-400/30 to-cyan-400/30 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob dark:mix-blend-normal dark:opacity-30"></div>
+        <div class="absolute -bottom-40 -left-32 w-80 h-80 bg-linear-to-br from-purple-400/30 to-pink-400/30 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob animation-delay-2000 dark:mix-blend-normal dark:opacity-30"></div>
+        <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-linear-to-br from-cyan-400/20 to-blue-400/20 rounded-full mix-blend-multiply filter blur-2xl opacity-50 animate-blob animation-delay-4000 dark:mix-blend-normal dark:opacity-20"></div>
+      </div>
+    {{- end -}}
+  </div>
+
+  {{- /* 内容容器 */ -}}
+  <div class="relative max-w-7xl mx-auto px-4 sm:px-6">
+    {{- /* 顶部间距 - 补偿 header 高度 */ -}}
+    <div class="pt-0 md:pt-[76px] pointer-events-none"></div>
+    
+    <div class="py-12 md:py-20">
+      {{- /* 文字内容区域 - 居中布局 */ -}}
+      <div class="text-center pb-10 md:pb-16 max-w-5xl mx-auto">
+        
+        {{- /* Tagline */ -}}
+        {{- with $tagline -}}
+        <p class="text-base text-secondary dark:text-blue-200 font-bold tracking-wide uppercase intersect-once intersect-quarter motion-safe:md:opacity-0 motion-safe:md:intersect:animate-fade">
+          {{ . | safeHTML }}
+        </p>
+        {{- end -}}
+        
+        {{- /* 主标题 */ -}}
+        {{- with $title -}}
+        <h1 class="text-5xl md:text-6xl font-bold leading-tighter tracking-tighter mb-4 font-heading dark:text-gray-200 intersect-once intersect-quarter motion-safe:md:opacity-0 motion-safe:md:intersect:animate-fade">
+          {{ . | safeHTML }}
+        </h1>
+        {{- end -}}
+        
+        {{- /* 副标题和按钮容器 */ -}}
+        <div class="max-w-3xl mx-auto">
+          {{- /* 副标题 */ -}}
+          {{- with $subtitle -}}
+          <p class="text-xl text-muted mb-6 dark:text-slate-300 intersect-once intersect-quarter motion-safe:md:opacity-0 motion-safe:md:intersect:animate-fade">
+            {{ . | safeHTML }}
+          </p>
+          {{- end -}}
+          
+          {{- /* Actions 按钮组 */ -}}
+          {{- if $actions -}}
+          <div class="max-w-xs sm:max-w-md m-auto flex flex-nowrap flex-col sm:flex-row sm:justify-center gap-4 intersect-once intersect-quarter motion-safe:md:opacity-0 motion-safe:md:intersect:animate-fade">
+            {{- range $actions -}}
+            <div class="flex w-full sm:w-auto">
+              {{- partial "ui/button.html" (dict 
+                "text" .text 
+                "href" .href 
+                "variant" (.variant | default "secondary")
+                "target" .target
+                "icon" .icon
+                "class" "w-full sm:mb-0"
+              ) -}}
+            </div>
+            {{- end -}}
+          </div>
+          {{- end -}}
+        </div>
+        
+        {{- /* 额外内容 */ -}}
+        {{- with $content -}}
+        <div class="mt-8">
+          {{ . | safeHTML }}
+        </div>
+        {{- end -}}
+      </div>
+      
+      {{- /* Hero 图片区域 */ -}}
+      {{- if $image -}}
+      {{- $imgSrc := "" -}}
+      {{- $imgAlt := "Hero image" -}}
+      {{- if reflect.IsMap $image -}}
+        {{- $imgSrc = $image.src -}}
+        {{- $imgAlt = $image.alt | default "Hero image" -}}
+      {{- else -}}
+        {{- $imgSrc = $image -}}
+      {{- end -}}
+      
+      {{- if $imgSrc -}}
+      <div class="intersect-once intersect-no-queue intersect-quarter motion-safe:md:opacity-0 motion-safe:md:intersect:animate-fade">
+        <div class="relative m-auto max-w-5xl">
+          {{- partial "utils/image.html" (dict
+            "src" $imgSrc
+            "alt" $imgAlt
+            "class" "mx-auto rounded-md w-full"
+            "loading" "eager"
+            "priority" true
+            "width" 1024
+            "sizes" "(max-width: 767px) 400px, (max-width: 1023px) 768px, (max-width: 2039px) 1024px, 2040px"
+          ) -}}
+        </div>
+      </div>
+      {{- end -}}
+      {{- end -}}
+    </div>
+  </div>
+</section>

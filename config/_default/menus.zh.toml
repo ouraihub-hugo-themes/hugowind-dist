@@ -39,7 +39,7 @@
 
 [[main]]
   parent = "pages"
-  name = "功能特性"
+  name = "功能特性 (锚点链接)"
   url = "/#features"
   weight = 1
 
@@ -130,32 +130,26 @@
 [[main]]
   parent = "blog"
   name = "博客列表"
-  pageRef = "/blog/"
+  pageRef = "/posts/"
   weight = 1
 
 [[main]]
   parent = "blog"
   name = "文章示例"
-  pageRef = "/get-started-website-with-astro-tailwind-css/"
+  pageRef = "/posts/getting-started/"
   weight = 2
 
 [[main]]
   parent = "blog"
-  name = "MDX 文章"
-  pageRef = "/markdown-elements-demo-post/"
+  name = "分类页面"
+  pageRef = "/categories/tutorial/"
   weight = 3
 
 [[main]]
   parent = "blog"
-  name = "分类页面"
-  pageRef = "/category/tutorials/"
-  weight = 4
-
-[[main]]
-  parent = "blog"
   name = "标签页面"
-  pageRef = "/tag/astro/"
-  weight = 5
+  pageRef = "/tags/hugo/"
+  weight = 4
 
 # ===== Widgets 单独链接 =====
 [[main]]
@@ -166,16 +160,141 @@
 # ===== Header Actions =====
 [[actions]]
   name = "下载"
-  url = "https://github.com/onwidget/astrowind"
+  url = "https://github.com/ouraihub-hugo-themes/hugowind-dist"
   weight = 1
 
 # ===== Footer Links =====
-[[footer]]
+# Product 列
+[[footer_product]]
+  name = "功能特性"
+  url = "#"
+  weight = 1
+
+[[footer_product]]
+  name = "安全性"
+  url = "#"
+  weight = 2
+
+[[footer_product]]
+  name = "团队"
+  url = "#"
+  weight = 3
+
+[[footer_product]]
+  name = "企业版"
+  url = "#"
+  weight = 4
+
+[[footer_product]]
+  name = "客户案例"
+  url = "#"
+  weight = 5
+
+[[footer_product]]
+  name = "定价"
+  pageRef = "/pricing/"
+  weight = 6
+
+[[footer_product]]
+  name = "资源"
+  url = "#"
+  weight = 7
+
+# Platform 列
+[[footer_platform]]
+  name = "开发者 API"
+  url = "#"
+  weight = 1
+
+[[footer_platform]]
+  name = "合作伙伴"
+  url = "#"
+  weight = 2
+
+[[footer_platform]]
+  name = "Atom"
+  url = "#"
+  weight = 3
+
+[[footer_platform]]
+  name = "Electron"
+  url = "#"
+  weight = 4
+
+[[footer_platform]]
+  name = "HugoWind 桌面版"
+  url = "#"
+  weight = 5
+
+# Support 列
+[[footer_support]]
+  name = "文档"
+  url = "#"
+  weight = 1
+
+[[footer_support]]
+  name = "社区论坛"
+  url = "#"
+  weight = 2
+
+[[footer_support]]
+  name = "专业服务"
+  url = "#"
+  weight = 3
+
+[[footer_support]]
+  name = "技能培训"
+  url = "#"
+  weight = 4
+
+[[footer_support]]
+  name = "状态"
+  url = "#"
+  weight = 5
+
+# Company 列
+[[footer_company]]
+  name = "关于我们"
+  pageRef = "/about/"
+  weight = 1
+
+[[footer_company]]
+  name = "博客"
+  pageRef = "/posts/"
+  weight = 2
+
+[[footer_company]]
+  name = "招聘"
+  url = "#"
+  weight = 3
+
+[[footer_company]]
+  name = "新闻"
+  url = "#"
+  weight = 4
+
+[[footer_company]]
+  name = "包容性"
+  url = "#"
+  weight = 5
+
+[[footer_company]]
+  name = "社会影响"
+  url = "#"
+  weight = 6
+
+[[footer_company]]
+  name = "商店"
+  url = "#"
+  weight = 7
+
+# Secondary Footer Links (底部法律链接)
+[[footer_secondary]]
   name = "服务条款"
   pageRef = "/terms/"
   weight = 1
 
-[[footer]]
+[[footer_secondary]]
   name = "隐私政策"
   pageRef = "/privacy/"
   weight = 2

@@ -1,0 +1,27 @@
+{{ define "main" }}
+
+{{ with .Params.sections }}
+  {{ range . }}
+    {{ $widgetType := .type | default "" }}
+    
+    {{ if $widgetType }}
+      {{ $partialPath := printf "widgets/%s.html" $widgetType }}
+      
+      {{ if templates.Exists (printf "partials/%s" $partialPath) }}
+        {{ partial $partialPath . }}
+      {{ else }}
+        <!-- Widget "{{ $widgetType }}" not found at partials/{{ $partialPath }} -->
+      {{ end }}
+    {{ end }}
+  {{ end }}
+{{ else }}
+  <section class="py-12 md:py-16 lg:py-20">
+    <div class="max-w-7xl mx-auto px-4 md:px-6">
+      <div class="prose prose-lg dark:prose-invert max-w-none">
+        {{ .Content }}
+      </div>
+    </div>
+  </section>
+{{ end }}
+
+{{ end }}

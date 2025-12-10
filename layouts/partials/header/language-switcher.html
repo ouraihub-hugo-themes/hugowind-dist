@@ -26,10 +26,10 @@
           {{ .Site.Language.LanguageName }}
         </span>
       </li>
-      {{- /* 翻译版本 */ -}}
+      {{- /* 翻译版本 - 使用 RelPermalink 生成相对路径 */ -}}
       {{- range .Translations }}
       <li>
-        <a href="{{ .Permalink }}" class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition">
+        <a href="{{ .RelPermalink }}" class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition">
           {{ .Language.LanguageName }}
         </a>
       </li>
@@ -43,7 +43,7 @@
           {{ .LanguageName }}
         </span>
         {{- else }}
-        <a href="{{ printf "/%s/" .Lang | absURL }}" class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition">
+        <a href="/{{ .Lang }}/" class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition">
           {{ .LanguageName }}
         </a>
         {{- end }}

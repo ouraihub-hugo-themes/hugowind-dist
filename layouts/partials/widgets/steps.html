@@ -1,0 +1,78 @@
+{{- /*
+  Steps Widget - 复刻 AstroWind Steps.astro
+  参考: astrowind/src/components/widgets/Steps.astro
+  
+  参数:
+    - id: 可选，section 的 ID
+    - isDark: 可选，是否使用暗色背景
+    - tagline: 可选，标签行
+    - title: 可选，主标题
+    - subtitle: 可选，副标题
+    - items: 必需，步骤项数组
+      - title: 项目标题
+      - description: 项目描述
+      - icon: 图标名称
+    - image: 可选，图片配置
+      - src: 图片路径
+      - alt: 图片描述
+    - isReversed: 可选，是否反向布局
+    - classes: 可选，自定义样式类
+*/ -}}
+
+{{- $id := .id | default "" -}}
+{{- $isDark := .isDark | default false -}}
+{{- $tagline := .tagline | default "" -}}
+{{- $title := .title | default "" -}}
+{{- $subtitle := .subtitle | default "" -}}
+{{- $items := .items | default slice -}}
+{{- $image := .image | default dict -}}
+{{- $isReversed := .isReversed | default false -}}
+{{- $classes := .classes | default dict -}}
+
+{{- /* 构建容器类 */ -}}
+{{- $containerClass := printf "max-w-5xl %s" ($classes.container | default "") -}}
+
+<section class="relative not-prose scroll-mt-[72px]"{{ with $id }} id="{{ . }}"{{ end }}>
+  {{- /* 背景层 */ -}}
+  <div class="absolute inset-0 pointer-events-none -z-1" aria-hidden="true">
+    <div class="absolute inset-0{{ if $isDark }} bg-dark dark:bg-transparent{{ end }}"></div>
+  </div>
+  
+  {{- /* 内容容器 */ -}}
+  <div class="relative mx-auto max-w-7xl px-4 md:px-6 py-12 md:py-16 lg:py-20 text-default intersect-once intersect-quarter intersect-no-queue motion-safe:md:opacity-0 motion-safe:md:intersect:animate-fade {{ $containerClass }}{{ if $isDark }} dark{{ end }}">
+    {{- /* Flex 容器 */ -}}
+    <div class="flex flex-col gap-8 md:gap-12{{ if and $image.src $isReversed }} md:flex-row-reverse{{ else if $image.src }} md:flex-row{{ end }}">
+      {{- /* 左侧内容区 */ -}}
+      <div class="md:py-4 md:self-center{{ if $image.src }} md:basis-1/2{{ else }} w-full{{ end }}">
+        {{- /* Headline 部分 */ -}}
+        {{- partial "ui/headline.html" (dict 
+          "title" $title 
+          "subtitle" $subtitle 
+          "tagline" $tagline
+          "classes" (dict 
+            "container" "text-left rtl:text-right"
+            "title" "text-3xl lg:text-4xl"
+          )
+        ) -}}
+        
+        {{- /* Timeline 部分 */ -}}
+        {{- partial "ui/timeline.html" (dict 
+          "items" $items 
+          "classes" ($classes.items | default dict)
+        ) -}}
+      </div>
+      
+      {{- /* 右侧图片区 */ -}}
+      {{- with $image.src -}}
+      <div class="relative md:basis-1/2">
+        <img 
+          class="inset-0 object-cover object-top w-full rounded-md shadow-lg md:absolute md:h-full bg-gray-400 dark:bg-slate-700"
+          src="{{ . }}"
+          alt="{{ $image.alt | default "" }}"
+          loading="lazy"
+        />
+      </div>
+      {{- end -}}
+    </div>
+  </div>
+</section>

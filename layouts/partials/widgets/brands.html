@@ -1,0 +1,74 @@
+{{- /*
+  Brands Widget - 复刻 AstroWind Brands.astro
+  参考: astrowind/src/components/widgets/Brands.astro
+  
+  参数:
+    - id: 可选，section 的 ID
+    - isDark: 可选，是否使用暗色背景
+    - tagline: 可选，标签行
+    - title: 可选，主标题
+    - subtitle: 可选，副标题
+    - icons: 可选，图标名称数组
+    - images: 可选，品牌图片数组
+      - src: 图片路径
+      - alt: 替代文本
+    - bg: 可选，自定义背景 HTML
+    - classes: 可选，自定义样式类
+  
+  Requirements: 1.2
+*/ -}}
+
+{{- $id := .id | default "" -}}
+{{- $isDark := .isDark | default false -}}
+{{- $tagline := .tagline | default "" -}}
+{{- $title := .title | default "" -}}
+{{- $subtitle := .subtitle | default "" -}}
+{{- $icons := .icons | default slice -}}
+{{- $images := .images | default slice -}}
+{{- $bg := .bg | default "" -}}
+{{- $classes := .classes | default dict -}}
+
+{{- /* 构建容器类 */ -}}
+{{- $containerClass := printf "max-w-6xl %s" ($classes.container | default "") -}}
+
+<section class="relative not-prose scroll-mt-[72px]"{{ with $id }} id="{{ . }}"{{ end }}>
+  {{- /* 背景层 */ -}}
+  <div class="absolute inset-0 pointer-events-none -z-1" aria-hidden="true">
+    {{- if $bg -}}
+      {{ $bg | safeHTML }}
+    {{- else -}}
+      <div class="absolute inset-0{{ if $isDark }} bg-dark dark:bg-transparent{{ end }}"></div>
+    {{- end -}}
+  </div>
+  
+  {{- /* 内容容器 */ -}}
+  <div class="relative mx-auto px-4 md:px-6 py-12 md:py-16 lg:py-20 text-default intersect-once intersect-quarter intersect-no-queue motion-safe:md:opacity-0 motion-safe:md:intersect:animate-fade {{ $containerClass }}{{ if $isDark }} dark{{ end }}">
+    {{- /* Headline 部分 */ -}}
+    {{- partial "ui/headline.html" (dict "title" $title "subtitle" $subtitle "tagline" $tagline) -}}
+    
+    {{- /* Brands 展示区域 */ -}}
+    <div class="flex flex-wrap justify-center gap-x-6 sm:gap-x-12 lg:gap-x-24">
+      {{- /* 图标列表 */ -}}
+      {{- range $icons -}}
+      {{- partial "ui/icon.html" (dict "name" . "class" "py-3 lg:py-5 w-12 h-auto mx-auto sm:mx-0 text-gray-500") -}}
+      {{- end -}}
+      
+      {{- /* 图片列表 */ -}}
+      {{- range $images -}}
+        {{- $imgSrc := "" -}}
+        {{- $imgAlt := "" -}}
+        {{- if reflect.IsMap . -}}
+          {{- $imgSrc = .src -}}
+          {{- $imgAlt = .alt | default "" -}}
+        {{- else -}}
+          {{- $imgSrc = . -}}
+        {{- end -}}
+        {{- if $imgSrc -}}
+        <div class="flex justify-center col-span-1 my-2 lg:my-4 py-1 px-3 rounded-md dark:bg-gray-200">
+          <img src="{{ $imgSrc }}" alt="{{ $imgAlt }}" class="max-h-12" width="120" height="48" loading="lazy" />
+        </div>
+        {{- end -}}
+      {{- end -}}
+    </div>
+  </div>
+</section>

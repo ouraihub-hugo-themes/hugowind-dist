@@ -125,8 +125,8 @@ theme = "light"
 [[socialLinks]]
   ariaLabel = "Github"
   icon = "tabler:brand-github"
-  href = "https://github.com/onwidget/astrowind"
+  href = "https://github.com/ouraihub-hugo-themes/hugowind-dist"
 
 # ===== 页脚备注 =====
 [footNote]
-  text = 'Made by <a class="text-blue-600 underline dark:text-muted" href="https://onwidget.com/">onWidget</a> · All rights reserved.'
+  text = 'Made by <a class="text-blue-600 underline dark:text-muted" href="https://ouraihub.com/">OurAiHub</a> · All rights reserved.'

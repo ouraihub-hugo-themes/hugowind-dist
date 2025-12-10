@@ -1,9 +1,43 @@
 {{- define "main" }}
-{{- /* 首页模板 - 参考 AstroWind index.astro */ -}}
+{{- /*
+  首页模板 - 支持 sections 配置
+  
+  如果 Front Matter 中有 sections 配置，则遍历渲染对应的 Widget
+  否则使用旧的 home/hero.html 组件
+*/ -}}
 
-{{- /* Hero 区域 */ -}}
-{{ partial "home/hero.html" . }}
+{{- if .Params.sections -}}
+  {{- /* Sections 模式：遍历 sections 配置，渲染对应的 Widget */ -}}
+  {{- range .Params.sections -}}
+    {{- $widgetType := .type | default "" -}}
+    
+    {{- if $widgetType -}}
+      {{- /* 构建 widget partial 路径 */ -}}
+      {{- $partialPath := printf "widgets/%s.html" $widgetType -}}
+      
+      {{- /* 检查 partial 是否存在 */ -}}
+      {{- if templates.Exists (printf "partials/%s" $partialPath) -}}
+        {{- partial $partialPath . -}}
+      {{- else -}}
+        <!-- Widget "{{ $widgetType }}" not found at partials/{{ $partialPath }} -->
+      {{- end -}}
+    {{- end -}}
+  {{- end -}}
+  
+  {{- /* 如果有 .Content，也渲染出来 */ -}}
+  {{- if .Content -}}
+  <section class="py-12 md:py-16 lg:py-20">
+    <div class="max-w-7xl mx-auto px-4 md:px-6">
+      <div class="prose prose-lg dark:prose-invert max-w-none">
+        {{ .Content }}
+      </div>
+    </div>
+  </section>
+  {{- end -}}
 
-{{- /* 其他首页组件将在后续任务中添加 */ -}}
+{{- else -}}
+  {{- /* 旧模式：使用 home/hero.html 组件 */ -}}
+  {{ partial "home/hero.html" . }}
+{{- end -}}
 
 {{- end }}

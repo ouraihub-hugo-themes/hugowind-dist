@@ -1,0 +1,77 @@
+{{- /*
+  ItemGrid2 组件 - 复刻 AstroWind ItemGrid2.astro
+  参考: astrowind/src/components/ui/ItemGrid2.astro
+  
+  与 ItemGrid 的区别:
+  - 卡片式布局，带阴影和背景
+  - 图标在顶部，不在左侧
+  - 适合展示独立的功能卡片
+  
+  参数:
+    - items: 必需，项目数组
+      - title: 项目标题
+      - description: 项目描述
+      - icon: 图标名称
+      - callToAction: 可选，行动按钮配置
+    - columns: 可选，列数 (2, 3, 4)，默认 3
+    - defaultIcon: 可选，默认图标
+    - classes: 可选，自定义样式类
+      - container: 容器类
+      - panel: 面板类
+      - title: 标题类
+      - description: 描述类
+      - icon: 图标类
+*/ -}}
+
+{{- $items := .items | default slice -}}
+{{- $columns := .columns | default 3 -}}
+{{- $defaultIcon := .defaultIcon | default "" -}}
+
+{{- /* 样式类配置 */ -}}
+{{- $classes := .classes | default dict -}}
+{{- $containerClass := $classes.container | default "" -}}
+{{- $panelClass := $classes.panel | default "" -}}
+{{- $titleClass := $classes.title | default "" -}}
+{{- $descriptionClass := $classes.description | default "" -}}
+{{- $iconClass := $classes.icon | default "text-primary" -}}
+
+{{- /* 根据列数生成网格类 */ -}}
+{{- $gridClass := "" -}}
+{{- if eq $columns 4 -}}
+  {{- $gridClass = "lg:grid-cols-4 md:grid-cols-3 sm:grid-cols-2" -}}
+{{- else if eq $columns 3 -}}
+  {{- $gridClass = "lg:grid-cols-3 sm:grid-cols-2" -}}
+{{- else if eq $columns 2 -}}
+  {{- $gridClass = "sm:grid-cols-2" -}}
+{{- end -}}
+
+{{- if and $items (gt (len $items) 0) -}}
+<div class="grid gap-8 gap-x-12 sm:gap-y-8 {{ $gridClass }} {{ $containerClass }}">
+  {{- range $items -}}
+    {{- $itemClasses := .classes | default dict -}}
+    {{- $icon := .icon | default $defaultIcon -}}
+  <div class="relative flex flex-col intersect-once intersect-quarter intersect-no-queue motion-safe:md:opacity-0 motion-safe:md:intersect:animate-fade {{ $panelClass }} {{ $itemClasses.panel | default "" }}">
+    {{- /* 图标区域 - 顶部显示 */ -}}
+    {{- with $icon -}}
+    {{- partial "ui/icon.html" (dict "name" . "class" (printf "mb-2 w-10 h-10 %s %s" $iconClass ($itemClasses.icon | default ""))) -}}
+    {{- end -}}
+    {{- /* 标题 */ -}}
+    {{- with .title -}}
+    <div class="text-xl font-bold {{ $titleClass }} {{ $itemClasses.title | default "" }}">{{ . }}</div>
+    {{- end -}}
+    {{- /* 描述 */ -}}
+    {{- with .description -}}
+    <p class="text-muted mt-2 {{ $descriptionClass }} {{ $itemClasses.description | default "" }}">
+      {{ . | safeHTML }}
+    </p>
+    {{- end -}}
+    {{- /* 行动按钮 */ -}}
+    {{- with .callToAction -}}
+    <div class="mt-2">
+      {{- partial "ui/button.html" . -}}
+    </div>
+    {{- end -}}
+  </div>
+  {{- end -}}
+</div>
+{{- end -}}

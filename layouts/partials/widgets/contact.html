@@ -1,0 +1,132 @@
+{{- /*
+  Contact Widget - 复刻 AstroWind Contact.astro
+  参考: astrowind/src/components/widgets/Contact.astro
+  
+  参数:
+    - id: 可选，section 的 ID
+    - isDark: 可选，是否使用暗色背景
+    - tagline: 可选，标签行
+    - title: 可选，主标题
+    - subtitle: 可选，副标题
+    - inputs: 可选，表单输入字段数组
+      - type: 输入类型 (text, email, tel, textarea)
+      - name: 字段名称
+      - label: 标签文本
+      - placeholder: 占位符文本
+      - autocomplete: 自动完成属性
+    - textarea: 可选，文本域配置
+      - label: 标签文本
+      - name: 字段名称
+      - placeholder: 占位符文本
+      - rows: 行数
+    - disclaimer: 可选，免责声明配置
+      - label: 标签文本
+    - button: 可选，提交按钮文本
+    - description: 可选，表单描述
+    - bg: 可选，自定义背景 HTML
+    - classes: 可选，自定义样式类
+  
+  Requirements: 3.3
+*/ -}}
+
+{{- $id := .id | default "" -}}
+{{- $isDark := .isDark | default false -}}
+{{- $tagline := .tagline | default "" -}}
+{{- $title := .title | default "" -}}
+{{- $subtitle := .subtitle | default "" -}}
+{{- $inputs := .inputs | default slice -}}
+{{- $textarea := .textarea | default dict -}}
+{{- $disclaimer := .disclaimer | default dict -}}
+{{- $button := .button | default (i18n "contact_submit" | default "Contact us") -}}
+{{- $description := .description | default "" -}}
+{{- $bg := .bg | default "" -}}
+{{- $classes := .classes | default dict -}}
+
+{{- /* 构建容器类 */ -}}
+{{- $containerClass := $classes.container | default "" -}}
+
+<section class="relative not-prose scroll-mt-[72px]"{{ with $id }} id="{{ . }}"{{ end }}>
+  {{- /* 背景层 */ -}}
+  <div class="absolute inset-0 pointer-events-none -z-1" aria-hidden="true">
+    {{- if $bg -}}
+      {{ $bg | safeHTML }}
+    {{- else -}}
+      <div class="absolute inset-0{{ if $isDark }} bg-dark dark:bg-transparent{{ end }}"></div>
+    {{- end -}}
+  </div>
+  
+  {{- /* 内容容器 */ -}}
+  <div class="relative mx-auto max-w-7xl px-4 md:px-6 py-12 md:py-16 lg:py-20 text-default intersect-once intersect-quarter intersect-no-queue motion-safe:md:opacity-0 motion-safe:md:intersect:animate-fade {{ $containerClass }}{{ if $isDark }} dark{{ end }}">
+    {{- /* Headline 部分 */ -}}
+    {{- partial "ui/headline.html" (dict "title" $title "subtitle" $subtitle "tagline" $tagline) -}}
+    
+    {{- /* 表单容器 */ -}}
+    {{- if or $inputs $textarea -}}
+    <div class="flex flex-col max-w-xl mx-auto rounded-lg backdrop-blur border border-gray-200 dark:border-gray-700 bg-white dark:bg-slate-900 shadow p-4 sm:p-6 lg:p-8 w-full">
+      <form>
+        {{- /* 输入字段 */ -}}
+        {{- range $inputs -}}
+          {{- $inputType := .type | default "text" -}}
+          {{- $inputName := .name | default "" -}}
+          {{- $inputLabel := .label | default "" -}}
+          {{- $inputPlaceholder := .placeholder | default "" -}}
+          {{- $inputAutocomplete := .autocomplete | default "" -}}
+          
+          {{- if eq $inputType "textarea" -}}
+          {{- /* 文本域 */ -}}
+          <div class="mb-6">
+            {{- if $inputLabel -}}
+            <label for="{{ $inputName }}" class="block text-sm font-medium">{{ $inputLabel }}</label>
+            {{- end -}}
+            <textarea id="{{ $inputName }}" name="{{ $inputName }}" rows="4" placeholder="{{ $inputPlaceholder }}" class="py-3 px-4 block w-full text-md rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-slate-900"></textarea>
+          </div>
+          {{- else -}}
+          {{- /* 普通输入框 */ -}}
+          <div class="mb-6">
+            {{- if $inputLabel -}}
+            <label for="{{ $inputName }}" class="block text-sm font-medium">{{ $inputLabel }}</label>
+            {{- end -}}
+            <input type="{{ $inputType }}" id="{{ $inputName }}" name="{{ $inputName }}" placeholder="{{ $inputPlaceholder }}"{{ with $inputAutocomplete }} autocomplete="{{ . }}"{{ end }} class="py-3 px-4 block w-full text-md rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-slate-900" />
+          </div>
+          {{- end -}}
+        {{- end -}}
+        
+        {{- /* 独立的文本域配置 */ -}}
+        {{- if $textarea.name -}}
+        <div class="mb-6">
+          {{- if $textarea.label -}}
+          <label for="{{ $textarea.name }}" class="block text-sm font-medium">{{ $textarea.label }}</label>
+          {{- end -}}
+          {{- $rows := $textarea.rows | default 4 -}}
+          <textarea id="{{ $textarea.name }}" name="{{ $textarea.name }}" rows="{{ $rows }}" placeholder="{{ $textarea.placeholder | default "" }}" class="py-3 px-4 block w-full text-md rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-slate-900"></textarea>
+        </div>
+        {{- end -}}
+        
+        {{- /* 免责声明复选框 */ -}}
+        {{- if $disclaimer.label -}}
+        <div class="mb-6">
+          <div class="flex items-start">
+            <div class="flex mt-0.5">
+              <input id="disclaimer" name="disclaimer" type="checkbox" class="cursor-pointer mt-1 py-3 px-4 block w-full text-md rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-slate-900" />
+            </div>
+            <div class="ml-3">
+              <label for="disclaimer" class="cursor-pointer select-none text-sm text-gray-600 dark:text-gray-400">{{ $disclaimer.label }}</label>
+            </div>
+          </div>
+        </div>
+        {{- end -}}
+        
+        {{- /* 描述文本 */ -}}
+        {{- if $description -}}
+        <div class="mb-6 text-sm text-gray-600 dark:text-gray-400">{{ $description }}</div>
+        {{- end -}}
+        
+        {{- /* 提交按钮 */ -}}
+        <div class="mt-10 grid">
+          <button type="submit" class="btn-primary">{{ $button }}</button>
+        </div>
+      </form>
+    </div>
+    {{- end -}}
+  </div>
+</section>

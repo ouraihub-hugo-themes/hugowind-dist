@@ -1,0 +1,72 @@
+{{- /*
+  Stats Widget - 复刻 AstroWind Stats.astro
+  参考: astrowind/src/components/widgets/Stats.astro
+  
+  参数:
+    - id: 可选，section 的 ID
+    - isDark: 可选，是否使用暗色背景
+    - tagline: 可选，标签行
+    - title: 可选，主标题
+    - subtitle: 可选，副标题
+    - stats: 必需，统计数据数组
+      - amount: 数值
+      - title: 标题
+      - icon: 可选，图标名称
+    - bg: 可选，自定义背景 HTML
+    - classes: 可选，自定义样式类
+  
+  Requirements: 1.8
+*/ -}}
+
+{{- $id := .id | default "" -}}
+{{- $isDark := .isDark | default false -}}
+{{- $tagline := .tagline | default "" -}}
+{{- $title := .title | default "" -}}
+{{- $subtitle := .subtitle | default "" -}}
+{{- $stats := .stats | default slice -}}
+{{- $bg := .bg | default "" -}}
+{{- $classes := .classes | default dict -}}
+
+{{- /* 构建容器类 */ -}}
+{{- $containerClass := printf "max-w-6xl %s" ($classes.container | default "") -}}
+
+<section class="relative not-prose scroll-mt-[72px]"{{ with $id }} id="{{ . }}"{{ end }}>
+  {{- /* 背景层 */ -}}
+  <div class="absolute inset-0 pointer-events-none -z-1" aria-hidden="true">
+    {{- if $bg -}}
+      {{ $bg | safeHTML }}
+    {{- else -}}
+      <div class="absolute inset-0{{ if $isDark }} bg-dark dark:bg-transparent{{ end }}"></div>
+    {{- end -}}
+  </div>
+  
+  {{- /* 内容容器 */ -}}
+  <div class="relative mx-auto px-4 md:px-6 py-12 md:py-16 lg:py-20 text-default intersect-once intersect-quarter intersect-no-queue motion-safe:md:opacity-0 motion-safe:md:intersect:animate-fade {{ $containerClass }}{{ if $isDark }} dark{{ end }}">
+    {{- /* Headline 部分 */ -}}
+    {{- partial "ui/headline.html" (dict "title" $title "subtitle" $subtitle "tagline" $tagline) -}}
+    
+    {{- /* Stats 网格 */ -}}
+    <div class="flex flex-wrap justify-center -m-4 text-center">
+      {{- range $stats -}}
+      <div class="p-4 md:w-1/4 sm:w-1/2 w-full min-w-[220px] text-center md:border-r md:last:border-none dark:md:border-slate-500 intersect-once motion-safe:md:opacity-0 motion-safe:md:intersect:animate-fade intersect-quarter">
+        {{- /* 图标 */ -}}
+        {{- with .icon -}}
+        <div class="flex items-center justify-center mx-auto mb-4 text-primary">
+          {{- partial "ui/icon.html" (dict "name" . "class" "w-10 h-10") -}}
+        </div>
+        {{- end -}}
+        
+        {{- /* 数值 */ -}}
+        {{- with .amount -}}
+        <div class="font-heading text-primary text-[2.6rem] font-bold dark:text-white lg:text-5xl xl:text-6xl">{{ . }}</div>
+        {{- end -}}
+        
+        {{- /* 标题 */ -}}
+        {{- with .title -}}
+        <div class="text-sm font-medium uppercase tracking-widest text-gray-800 dark:text-slate-400 lg:text-base">{{ . }}</div>
+        {{- end -}}
+      </div>
+      {{- end -}}
+    </div>
+  </div>
+</section>

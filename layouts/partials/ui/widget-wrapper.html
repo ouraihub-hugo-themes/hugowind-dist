@@ -1,0 +1,37 @@
+{{- /*
+  Widget Wrapper 组件 - 复刻 AstroWind WidgetWrapper.astro
+  参考: astrowind/src/components/ui/WidgetWrapper.astro
+  
+  参数:
+    - id: 可选，section 的 ID
+    - isDark: 可选，是否使用暗色背景
+    - containerClass: 可选，容器额外的 CSS 类
+    - bg: 可选，自定义背景 HTML
+    - as: 可选，HTML 标签名，默认 "section"
+    - content: 必需，slot 内容
+*/ -}}
+
+{{- $id := .id | default "" -}}
+{{- $isDark := .isDark | default false -}}
+{{- $containerClass := .containerClass | default "" -}}
+{{- $bg := .bg | default "" -}}
+{{- $as := .as | default "section" -}}
+
+<{{ $as }} class="relative not-prose scroll-mt-[72px]"{{ with $id }} id="{{ . }}"{{ end }}>
+  {{- /* 背景层 */ -}}
+  <div class="absolute inset-0 pointer-events-none -z-1" aria-hidden="true">
+    {{- if $bg -}}
+      {{ $bg | safeHTML }}
+    {{- else -}}
+      {{- /* 默认背景 - 复刻 Background.astro */ -}}
+      <div class="absolute inset-0{{ if $isDark }} bg-dark dark:bg-transparent{{ end }}"></div>
+    {{- end -}}
+  </div>
+  
+  {{- /* 内容容器 */ -}}
+  <div class="relative mx-auto max-w-7xl px-4 md:px-6 py-12 md:py-16 lg:py-20 text-default intersect-once intersect-quarter intersect-no-queue motion-safe:md:opacity-0 motion-safe:md:intersect:animate-fade{{ with $containerClass }} {{ . }}{{ end }}{{ if $isDark }} dark{{ end }}">
+    {{- with .content -}}
+      {{ . | safeHTML }}
+    {{- end -}}
+  </div>
+</{{ $as }}>

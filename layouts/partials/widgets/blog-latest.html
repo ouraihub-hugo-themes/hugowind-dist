@@ -1,0 +1,123 @@
+{{- /*
+  BlogLatestPosts Widget - 复刻 AstroWind BlogLatestPosts.astro
+  参考: astrowind/src/components/widgets/BlogLatestPosts.astro
+  
+  参数:
+    - id: 可选，section 的 ID
+    - isDark: 可选，是否使用暗色背景
+    - title: 可选，主标题
+    - information: 可选，说明文字
+    - linkText: 可选，查看更多链接文本，默认 "View all posts"
+    - linkUrl: 可选，查看更多链接地址，默认 "/posts/"
+    - count: 可选，显示文章数量，默认 4
+    - bg: 可选，自定义背景 HTML
+    - classes: 可选，自定义样式类
+  
+  Requirements: 1.10
+*/ -}}
+
+{{- $id := .id | default "" -}}
+{{- $isDark := .isDark | default false -}}
+{{- $title := .title | default "" -}}
+{{- $information := .information | default "" -}}
+{{- $linkText := .linkText | default (i18n "view_all_posts" | default "View all posts") -}}
+{{- $linkUrl := .linkUrl | default "/posts/" -}}
+{{- $count := .count | default 4 -}}
+{{- $bg := .bg | default "" -}}
+{{- $classes := .classes | default dict -}}
+
+{{- /* 构建容器类 */ -}}
+{{- $containerClass := $classes.container | default "" -}}
+
+{{- /* 获取最新文章 */ -}}
+{{- $posts := slice -}}
+{{- $postsSection := site.GetPage "section" "posts" -}}
+{{- if $postsSection -}}
+  {{- $posts = $postsSection.RegularPages | first $count -}}
+{{- end -}}
+
+<section class="relative not-prose scroll-mt-[72px]"{{ with $id }} id="{{ . }}"{{ end }}>
+  {{- /* 背景层 */ -}}
+  <div class="absolute inset-0 pointer-events-none -z-1" aria-hidden="true">
+    {{- if $bg -}}
+      {{ $bg | safeHTML }}
+    {{- else -}}
+      <div class="absolute inset-0{{ if $isDark }} bg-dark dark:bg-transparent{{ end }}"></div>
+    {{- end -}}
+  </div>
+  
+  {{- /* 内容容器 */ -}}
+  <div class="relative mx-auto max-w-7xl px-4 md:px-6 py-12 md:py-16 lg:py-20 text-default intersect-once intersect-quarter intersect-no-queue motion-safe:md:opacity-0 motion-safe:md:intersect:animate-fade {{ $containerClass }}{{ if $isDark }} dark{{ end }}">
+    
+    {{- /* 标题和信息区域 */ -}}
+    <div class="flex flex-col lg:justify-between lg:flex-row mb-8">
+      {{- if $title -}}
+      <div class="md:max-w-sm">
+        <h2 class="text-3xl font-bold tracking-tight sm:text-4xl sm:leading-none group font-heading mb-2">
+          {{ $title | safeHTML }}
+        </h2>
+        {{- if and $linkText $linkUrl -}}
+        <a href="{{ $linkUrl | relLangURL }}" class="cursor-pointer hover:text-primary">
+          {{ $linkText }} »
+        </a>
+        {{- end -}}
+      </div>
+      {{- end -}}
+      
+      {{- if $information -}}
+      <p class="text-muted dark:text-slate-400 lg:text-sm lg:max-w-md">
+        {{ $information | safeHTML }}
+      </p>
+      {{- end -}}
+    </div>
+    
+    {{- /* 文章网格 */ -}}
+    {{- if $posts -}}
+    <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+      {{- range $posts -}}
+      <article class="group mb-2 transition hover:shadow-lg rounded-lg overflow-hidden bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 intersect-once motion-safe:md:opacity-0 motion-safe:md:intersect:animate-fade intersect-quarter">
+        {{- /* 封面图片 */ -}}
+        <div class="relative h-40 bg-gray-200 dark:bg-slate-700 overflow-hidden">
+          {{- with .Params.image -}}
+          <a href="{{ $.RelPermalink }}" class="block w-full h-full">
+            <img src="{{ . }}" class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105" alt="{{ $.Title }}" loading="lazy" decoding="async">
+          </a>
+          {{- else -}}
+          <a href="{{ .RelPermalink }}" class="flex items-center justify-center w-full h-full bg-linear-to-br from-blue-100 to-cyan-100 dark:from-slate-700 dark:to-slate-600">
+            <svg class="w-12 h-12 text-gray-400 dark:text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z"></path>
+            </svg>
+          </a>
+          {{- end -}}
+        </div>
+        
+        {{- /* 内容区域 */ -}}
+        <div class="p-4">
+          {{- /* 日期 */ -}}
+          <div class="text-sm text-muted dark:text-slate-400 mb-2">
+            <time datetime="{{ .Date.Format "2006-01-02" }}">{{ .Date.Format "2006-01-02" }}</time>
+          </div>
+          
+          {{- /* 标题 */ -}}
+          <h3 class="text-lg font-bold leading-tight mb-2 font-heading dark:text-slate-200 line-clamp-2">
+            <a class="hover:text-primary dark:hover:text-blue-400 transition ease-in duration-200" href="{{ .RelPermalink }}">
+              {{ .Title }}
+            </a>
+          </h3>
+          
+          {{- /* 摘要 */ -}}
+          {{- $summary := "" -}}
+          {{- with .Description -}}
+            {{- $summary = . -}}
+          {{- else -}}
+            {{- $summary = .Summary | truncate 80 -}}
+          {{- end -}}
+          <p class="text-muted dark:text-slate-400 text-sm line-clamp-2">{{ $summary }}</p>
+        </div>
+      </article>
+      {{- end -}}
+    </div>
+    {{- end -}}
+    
+  </div>
+</section>

@@ -1,0 +1,143 @@
+{{- /*
+  Pricing Widget - 复刻 AstroWind Pricing.astro
+  参考: astrowind/src/components/widgets/Pricing.astro
+  
+  参数:
+    - id: 可选，section 的 ID
+    - isDark: 可选，是否使用暗色背景
+    - tagline: 可选，标签行
+    - title: 可选，主标题
+    - subtitle: 可选，副标题
+    - prices: 必需，价格套餐数组
+      - title: 套餐标题
+      - subtitle: 套餐副标题
+      - price: 价格数值
+      - period: 价格周期 (如 "/ month")
+      - items: 功能列表
+        - description: 功能描述
+        - icon: 可选，图标名称
+      - callToAction: 行动按钮
+        - text: 按钮文本
+        - href: 链接地址
+        - target: 可选，链接目标
+      - hasRibbon: 可选，是否显示推荐标签
+      - ribbonTitle: 可选，推荐标签文本
+    - classes: 可选，自定义样式类
+*/ -}}
+
+{{- $id := .id | default "" -}}
+{{- $isDark := .isDark | default false -}}
+{{- $tagline := .tagline | default "" -}}
+{{- $title := .title | default "" -}}
+{{- $subtitle := .subtitle | default "" -}}
+{{- $prices := .prices | default slice -}}
+{{- $classes := .classes | default dict -}}
+
+{{- /* 构建容器类 */ -}}
+{{- $containerClass := $classes.container | default "" -}}
+
+<section class="relative not-prose scroll-mt-[72px]"{{ with $id }} id="{{ . }}"{{ end }}>
+  {{- /* 背景层 */ -}}
+  <div class="absolute inset-0 pointer-events-none -z-1" aria-hidden="true">
+    <div class="absolute inset-0{{ if $isDark }} bg-dark dark:bg-transparent{{ end }}"></div>
+  </div>
+  
+  {{- /* 内容容器 */ -}}
+  <div class="relative mx-auto max-w-7xl px-4 md:px-6 py-12 md:py-16 lg:py-20 text-default {{ $containerClass }}{{ if $isDark }} dark{{ end }}">
+    {{- /* Headline 部分 */ -}}
+    {{- partial "ui/headline.html" (dict 
+      "title" $title 
+      "subtitle" $subtitle 
+      "tagline" $tagline
+      "classes" ($classes.headline | default dict)
+    ) -}}
+    
+    {{- /* 价格卡片网格 */ -}}
+    <div class="flex items-stretch justify-center">
+      <div class="grid grid-cols-3 gap-4 dark:text-white sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3">
+        {{- range $prices -}}
+        {{- $priceTitle := .title | default "" -}}
+        {{- $priceSubtitle := .subtitle | default "" -}}
+        {{- $price := .price -}}
+        {{- $period := .period | default "" -}}
+        {{- $items := .items | default slice -}}
+        {{- $callToAction := .callToAction | default dict -}}
+        {{- $hasRibbon := .hasRibbon | default false -}}
+        {{- $ribbonTitle := .ribbonTitle | default "" -}}
+        
+        {{- if and (or $price (eq $price 0)) $period -}}
+        <div class="col-span-3 mx-auto flex w-full sm:col-span-1 md:col-span-1 lg:col-span-1 xl:col-span-1 intersect-once motion-safe:md:intersect:animate-fade motion-safe:md:opacity-0 intersect-quarter">
+          <div class="relative rounded-lg backdrop-blur border border-gray-200 dark:border-gray-700 bg-white dark:bg-slate-900 shadow px-6 py-8 flex w-full max-w-sm flex-col justify-between text-center">
+            {{- /* Ribbon 推荐标签 */ -}}
+            {{- if and $hasRibbon $ribbonTitle -}}
+            <div class="absolute right-[-5px] 2xl:right-[-8px] rtl:right-auto rtl:left-[-8px] rtl:2xl:left-[-10px] top-[-5px] 2xl:top-[-10px] z-1 h-[100px] w-[100px] overflow-hidden text-right">
+              <span class="absolute top-[19px] right-[-21px] rtl:right-auto rtl:left-[-21px] block w-full rotate-45 rtl:-rotate-45 bg-green-700 text-center text-[10px] font-bold uppercase leading-5 text-white shadow-[0_3px_10px_-5px_rgba(0,0,0,0.3)] before:absolute before:left-0 before:top-full before:z-[-1] before:border-[3px] before:border-r-transparent before:border-b-transparent before:border-l-green-800 before:border-t-green-800 before:content-[''] after:absolute after:right-0 after:top-full after:z-[-1] after:border-[3px] after:border-l-transparent after:border-b-transparent after:border-r-green-800 after:border-t-green-800 after:content-['']">
+                {{ $ribbonTitle }}
+              </span>
+            </div>
+            {{- end -}}
+            
+            <div class="px-2 py-0">
+              {{- /* 套餐标题 */ -}}
+              {{- with $priceTitle -}}
+              <h3 class="text-center text-xl font-semibold uppercase leading-6 tracking-wider mb-2">{{ . }}</h3>
+              {{- end -}}
+              
+              {{- /* 套餐副标题 */ -}}
+              {{- with $priceSubtitle -}}
+              <p class="font-light sm:text-lg text-gray-600 dark:text-slate-400">{{ . }}</p>
+              {{- end -}}
+              
+              {{- /* 价格显示 */ -}}
+              <div class="my-8">
+                <div class="flex items-center justify-center text-center mb-1">
+                  <span class="text-5xl">$</span>
+                  <span class="text-6xl font-extrabold">{{ $price }}</span>
+                </div>
+                <span class="text-base leading-6 lowercase text-gray-600 dark:text-slate-400">{{ $period }}</span>
+              </div>
+              
+              {{- /* 功能列表 */ -}}
+              {{- with $items -}}
+              <ul class="my-8 md:my-10 space-y-2 text-left">
+                {{- range . -}}
+                {{- $description := .description | default "" -}}
+                {{- $icon := .icon | default "check" -}}
+                {{- if $description -}}
+                <li class="mb-1.5 flex items-start space-x-3 leading-7">
+                  <div class="rounded-full bg-primary mt-1">
+                    {{- partial "ui/icon.html" (dict "name" $icon "class" "w-5 h-5 font-bold p-1 text-white") -}}
+                  </div>
+                  <span>{{ $description }}</span>
+                </li>
+                {{- end -}}
+                {{- end -}}
+              </ul>
+              {{- end -}}
+            </div>
+            
+            {{- /* 行动按钮 */ -}}
+            {{- with $callToAction -}}
+            {{- if .href -}}
+            <div class="flex justify-center">
+              {{- $btnVariant := "secondary" -}}
+              {{- if $hasRibbon -}}
+                {{- $btnVariant = "primary" -}}
+              {{- end -}}
+              {{- partial "ui/button.html" (dict 
+                "variant" $btnVariant
+                "text" .text
+                "href" .href
+                "target" (.target | default "")
+              ) -}}
+            </div>
+            {{- end -}}
+            {{- end -}}
+          </div>
+        </div>
+        {{- end -}}
+        {{- end -}}
+      </div>
+    </div>
+  </div>
+</section>

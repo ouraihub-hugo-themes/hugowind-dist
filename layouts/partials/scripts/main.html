@@ -51,7 +51,32 @@
         applyTheme('light');
       }
     }
+    
+    // 更新主题切换图标
+    function updateThemeIcons() {
+      var isDark = document.documentElement.classList.contains('dark');
+      document.querySelectorAll('[data-aw-toggle-color-scheme]').forEach(function(btn) {
+        var sunIcon = btn.querySelector('.icon-sun');
+        var moonIcon = btn.querySelector('.icon-moon');
+        if (sunIcon && moonIcon) {
+          if (isDark) {
+            sunIcon.classList.add('hidden');
+            moonIcon.classList.remove('hidden');
+          } else {
+            sunIcon.classList.remove('hidden');
+            moonIcon.classList.add('hidden');
+          }
+        }
+      });
+    }
+    
     initTheme();
+    // 页面加载后立即更新图标状态
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', updateThemeIcons);
+    } else {
+      updateThemeIcons();
+    }
     
     // 事件绑定辅助函数
     function attachEvent(selector, event, fn) {
@@ -99,12 +124,7 @@
         if (lastChild) lastChild.classList.toggle('hidden');
       });
       
-      // 主题切换
-      attachEvent('[data-aw-toggle-color-scheme]', 'click', function() {
-        if (defaultTheme.endsWith(':only')) return;
-        document.documentElement.classList.toggle('dark');
-        localStorage.theme = document.documentElement.classList.contains('dark') ? 'dark' : 'light';
-      });
+      // 主题切换由 ThemeManager (main.js) 处理，这里不再重复绑定
       
       // 社交分享
       attachEvent('[data-aw-social-share]', 'click', function(e, elem) {
