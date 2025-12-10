@@ -1,0 +1,181 @@
+# 繁體中文選單配置
+# 參考: astrowind/src/navigation.ts
+
+# ===== Homes 下拉選單 =====
+[[main]]
+  identifier = "homes"
+  name = "首頁模板"
+  weight = 1
+
+[[main]]
+  parent = "homes"
+  name = "SaaS"
+  pageRef = "/homes/saas/"
+  weight = 1
+
+[[main]]
+  parent = "homes"
+  name = "創業公司"
+  pageRef = "/homes/startup/"
+  weight = 2
+
+[[main]]
+  parent = "homes"
+  name = "行動應用"
+  pageRef = "/homes/mobile-app/"
+  weight = 3
+
+[[main]]
+  parent = "homes"
+  name = "個人主頁"
+  pageRef = "/homes/personal/"
+  weight = 4
+
+# ===== Pages 下拉選單 =====
+[[main]]
+  identifier = "pages"
+  name = "頁面"
+  weight = 2
+
+[[main]]
+  parent = "pages"
+  name = "功能特性"
+  url = "/#features"
+  weight = 1
+
+[[main]]
+  parent = "pages"
+  name = "服務"
+  pageRef = "/services/"
+  weight = 2
+
+[[main]]
+  parent = "pages"
+  name = "定價"
+  pageRef = "/pricing/"
+  weight = 3
+
+[[main]]
+  parent = "pages"
+  name = "關於我們"
+  pageRef = "/about/"
+  weight = 4
+
+[[main]]
+  parent = "pages"
+  name = "聯繫我們"
+  pageRef = "/contact/"
+  weight = 5
+
+[[main]]
+  parent = "pages"
+  name = "服務條款"
+  pageRef = "/terms/"
+  weight = 6
+
+[[main]]
+  parent = "pages"
+  name = "隱私政策"
+  pageRef = "/privacy/"
+  weight = 7
+
+# ===== Landing 下拉選單 =====
+[[main]]
+  identifier = "landing"
+  name = "落地頁"
+  weight = 3
+
+[[main]]
+  parent = "landing"
+  name = "潛在客戶獲取"
+  pageRef = "/landing/lead-generation/"
+  weight = 1
+
+[[main]]
+  parent = "landing"
+  name = "長文銷售頁"
+  pageRef = "/landing/sales/"
+  weight = 2
+
+[[main]]
+  parent = "landing"
+  name = "點擊引導頁"
+  pageRef = "/landing/click-through/"
+  weight = 3
+
+[[main]]
+  parent = "landing"
+  name = "產品詳情頁"
+  pageRef = "/landing/product/"
+  weight = 4
+
+[[main]]
+  parent = "landing"
+  name = "即將上線"
+  pageRef = "/landing/pre-launch/"
+  weight = 5
+
+[[main]]
+  parent = "landing"
+  name = "訂閱頁"
+  pageRef = "/landing/subscription/"
+  weight = 6
+
+# ===== Blog 下拉選單 =====
+[[main]]
+  identifier = "blog"
+  name = "部落格"
+  weight = 4
+
+[[main]]
+  parent = "blog"
+  name = "部落格列表"
+  pageRef = "/blog/"
+  weight = 1
+
+[[main]]
+  parent = "blog"
+  name = "文章範例"
+  pageRef = "/get-started-website-with-astro-tailwind-css/"
+  weight = 2
+
+[[main]]
+  parent = "blog"
+  name = "MDX 文章"
+  pageRef = "/markdown-elements-demo-post/"
+  weight = 3
+
+[[main]]
+  parent = "blog"
+  name = "分類頁面"
+  pageRef = "/category/tutorials/"
+  weight = 4
+
+[[main]]
+  parent = "blog"
+  name = "標籤頁面"
+  pageRef = "/tag/astro/"
+  weight = 5
+
+# ===== Widgets 單獨連結 =====
+[[main]]
+  name = "元件"
+  url = "#"
+  weight = 5
+
+# ===== Header Actions =====
+[[actions]]
+  name = "下載"
+  url = "https://github.com/onwidget/astrowind"
+  weight = 1
+
+# ===== Footer Links =====
+[[footer]]
+  name = "服務條款"
+  pageRef = "/terms/"
+  weight = 1
+
+[[footer]]
+  name = "隱私政策"
+  pageRef = "/privacy/"
+  weight = 2

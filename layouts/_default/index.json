@@ -1,0 +1,16 @@
+{{- /* JSON 输出格式 - 用于搜索索引 */ -}}
+{{- $pages := where .Site.RegularPages "Type" "in" (slice "posts" "blog") -}}
+[
+{{- range $index, $page := $pages }}
+{{- if $index }},{{ end }}
+{
+  "title": {{ $page.Title | jsonify }},
+  "url": {{ $page.RelPermalink | jsonify }},
+  "content": {{ $page.Plain | jsonify }},
+  "description": {{ $page.Description | jsonify }},
+  "date": {{ $page.Date.Format "2006-01-02" | jsonify }},
+  "tags": {{ $page.Params.tags | jsonify }},
+  "categories": {{ $page.Params.categories | jsonify }}
+}
+{{- end }}
+]

@@ -1,0 +1,128 @@
+# HugoWind 主题参数配置
+# 参考: astrowind/src/config.yaml
+
+# 网站基础信息 - 与 AstroWind metadata 对应
+description = "🚀 Suitable for Startups, Small Business, Sass Websites, Professional Portfolios, Marketing Websites, Landing Pages & Blogs."
+keywords = ["Hugo", "Theme", "Blog", "Tailwind CSS", "Starter"]
+
+# 网站验证 - 与 AstroWind site 配置对应
+[site]
+  googleSiteVerificationId = ""  # Google Search Console 验证 ID
+
+# SEO 元数据 - 与 AstroWind metadata 对应
+[metadata]
+  [metadata.title]
+    default = "HugoWind"
+    template = "%s — HugoWind"
+  [metadata.robots]
+    index = true
+    follow = true
+  [metadata.openGraph]
+    siteName = "HugoWind"
+    type = "website"
+    [metadata.openGraph.image]
+      url = "/images/default.png"
+      width = 1200
+      height = 628
+  [metadata.twitter]
+    handle = "@onwidget"
+    site = "@onwidget"
+    cardType = "summary_large_image"
+
+# 国际化配置 - 与 AstroWind i18n 对应
+[i18n]
+  language = "en"
+  textDirection = "ltr"
+
+# 博客应用配置 - 与 AstroWind apps.blog 对应
+[blog]
+  isEnabled = true
+  postsPerPage = 6
+  pathname = "blog"
+  isRelatedPostsEnabled = true
+  relatedPostsCount = 4
+  [blog.post]
+    isEnabled = true
+    [blog.post.robots]
+      index = true
+  [blog.list]
+    isEnabled = true
+    [blog.list.robots]
+      index = true
+  [blog.category]
+    isEnabled = true
+    pathname = "category"
+    [blog.category.robots]
+      index = true
+  [blog.tag]
+    isEnabled = true
+    pathname = "tag"
+    [blog.tag.robots]
+      index = false
+
+# 分析配置 - 与 AstroWind analytics 对应
+[analytics]
+  [analytics.googleAnalytics]
+    id = ""
+
+# UI 配置 - 与 AstroWind ui 对应
+[ui]
+  theme = "system"  # Values: "system" | "light" | "dark" | "light:only" | "dark:only"
+
+# 搜索配置 - 使用 Pagefind
+[search]
+  enable = true
+  placeholder = ""  # 留空使用 i18n 翻译
+
+# 网站资源
+[assets]
+  favicon = "/images/favicon.ico"
+  logo = "/images/logo.png"
+  defaultImage = "/images/default.png"
+
+# 首页 Hero 配置 - 复刻 AstroWind 首页
+[hero]
+  enable = true
+  title = "Free template for creating websites with"
+  highlight = "Astro 5.0"
+  titleSuffix = "+ Tailwind CSS"
+  subtitle = "AstroWind is a free, customizable and production-ready template for Astro 5.0 + Tailwind CSS. Suitable for Startups, Small Business, SaaS websites, Professional Portfolios, Marketing websites, Landing Pages & Blogs."
+  # tagline = "Best Template"  # 可选的标签行
+  # image = "images/hero-image.png"  # 可选的 Hero 图片
+  [hero.primaryCTA]
+    text = "Get template"
+    link = "https://github.com/onwidget/astrowind"
+    icon = "tabler:download"
+  [hero.secondaryCTA]
+    text = "Learn more"
+    link = "#features"
+
+# 社交链接
+[social]
+  github = "https://github.com/onwidget/astrowind"
+  twitter = "https://twitter.com/onwidget"
+
+# 页脚配置
+[footer]
+  copyright = "Made by onWidget · All rights reserved."
+  poweredBy = true
+
+# CDN 配置 - 需求: 5.2
+# 用于生产环境的静态资源 CDN 加速
+[cdn]
+  # CDN URL（留空则不使用 CDN）
+  # 示例: "https://cdn.example.com" 或 "https://your-site.b-cdn.net"
+  url = ""
+  # 是否启用 CDN（仅在生产环境生效）
+  enable = false
+
+# 性能优化配置 - 需求: 5.1, 5.2
+[performance]
+  # 启用资源指纹（用于缓存策略）
+  fingerprint = true
+  # 启用资源完整性校验（SRI）
+  integrity = true
+  # 图片懒加载
+  lazyImages = true
+  # 预加载关键资源
+  preloadCritical = true

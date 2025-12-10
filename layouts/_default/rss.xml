@@ -1,0 +1,51 @@
+{{- /* HugoWind RSS 模板 - 多语言支持 */ -}}
+{{- $pctx := . -}}
+{{- if .IsHome -}}{{ $pctx = .Site }}{{- end -}}
+{{- $pages := slice -}}
+{{- if or $.IsHome $.IsSection -}}
+{{- $pages = $pctx.RegularPages -}}
+{{- else -}}
+{{- $pages = $pctx.Pages -}}
+{{- end -}}
+{{- $limit := .Site.Config.Services.RSS.Limit -}}
+{{- if ge $limit 1 -}}
+{{- $pages = $pages | first $limit -}}
+{{- end -}}
+{{- printf "<?xml version=\"1.0\" encoding=\"utf-8\" standalone=\"yes\"?>" | safeHTML }}
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+  <channel>
+    <title>{{ if eq .Title .Site.Title }}{{ .Site.Title }}{{ else }}{{ with .Title }}{{.}} | {{ end }}{{ .Site.Title }}{{ end }}</title>
+    <link>{{ .Permalink }}</link>
+    <description>{{ with .Site.Params.description }}{{ . }}{{ else }}{{ with .Description }}{{ . }}{{ end }}{{ end }}</description>
+    <generator>Hugo {{ hugo.Version }} -- hugowind.com</generator>
+    <language>{{ .Site.Language.Lang }}</language>{{ with .Site.Author.email }}
+    <managingEditor>{{.}}{{ with $.Site.Author.name }} ({{.}}){{end}}</managingEditor>{{end}}{{ with .Site.Author.email }}
+    <webMaster>{{.}}{{ with $.Site.Author.name }} ({{.}}){{end}}</webMaster>{{end}}{{ with .Site.Copyright }}
+    <copyright>{{.}}</copyright>{{end}}{{ if not .Date.IsZero }}
+    <lastBuildDate>{{ .Date.Format "Mon, 02 Jan 2006 15:04:05 -0700" | safeHTML }}</lastBuildDate>{{ end }}
+    {{- with .OutputFormats.Get "RSS" }}
+    {{ printf "<atom:link href=%q rel=\"self\" type=%q />" .Permalink .MediaType | safeHTML }}
+    {{- end }}
+    {{- range $pages }}
+    <item>
+      <title>{{ .Title }}</title>
+      <link>{{ .Permalink }}</link>
+      <pubDate>{{ .Date.Format "Mon, 02 Jan 2006 15:04:05 -0700" | safeHTML }}</pubDate>
+      {{- with .Params.author }}
+      <author>{{ . }}</author>
+      {{- end }}
+      <guid>{{ .Permalink }}</guid>
+      <description>{{ with .Description }}{{ . | html }}{{ else }}{{ .Summary | html }}{{ end }}</description>
+      {{- if .Params.image }}
+      <enclosure url="{{ .Params.image | absURL }}" type="image/jpeg" />
+      {{- end }}
+      {{- with .Params.categories }}
+      {{- range . }}
+      <category>{{ . }}</category>
+      {{- end }}
+      {{- end }}
+      <content:encoded>{{ .Content | html }}</content:encoded>
+    </item>
+    {{- end }}
+  </channel>
+</rss>

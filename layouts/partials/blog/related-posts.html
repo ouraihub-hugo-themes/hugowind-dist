@@ -1,0 +1,94 @@
+{{- /* 相关文章组件 - 参考 AstroWind RelatedPosts.astro */ -}}
+{{- $currentPage := . }}
+{{- $related := slice }}
+
+{{- /* 基于标签查找相关文章 */ -}}
+{{- with .Params.tags }}
+{{- $tags := . }}
+{{- range $tags }}
+{{- $tag := . }}
+{{- range where site.RegularPages "Params.tags" "intersect" (slice $tag) }}
+{{- if and (ne .Permalink $currentPage.Permalink) (not (in $related .)) }}
+{{- $related = $related | append . }}
+{{- end }}
+{{- end }}
+{{- end }}
+{{- end }}
+
+{{- /* 如果标签相关文章不足，基于分类补充 */ -}}
+{{- if lt (len $related) 4 }}
+{{- with .Params.categories }}
+{{- $categories := . }}
+{{- range $categories }}
+{{- $category := . }}
+{{- range where site.RegularPages "Params.categories" "intersect" (slice $category) }}
+{{- if and (ne .Permalink $currentPage.Permalink) (not (in $related .)) }}
+{{- $related = $related | append . }}
+{{- end }}
+{{- end }}
+{{- end }}
+{{- end }}
+{{- end }}
+
+{{- /* 限制显示数量 */ -}}
+{{- $related = first 4 $related }}
+
+{{- if gt (len $related) 0 }}
+<section class="mt-16 pt-8 border-t dark:border-slate-700">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6">
+    <header class="mb-8 text-center">
+      <h2 class="text-2xl md:text-3xl font-bold font-heading dark:text-slate-200">
+        {{ i18n "related_posts" | default "Related Posts" }}
+      </h2>
+    </header>
+    
+    <div class="grid gap-6 md:gap-8 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
+      {{- range $related }}
+      <article class="group bg-white dark:bg-slate-800 rounded-lg overflow-hidden border border-gray-200 dark:border-slate-700 hover:shadow-lg transition">
+        {{- /* 封面图片 */ -}}
+        <div class="relative h-40 bg-gray-200 dark:bg-slate-700 overflow-hidden">
+          {{- with .Params.image }}
+          <a href="{{ $.RelPermalink }}" class="block w-full h-full">
+            <img src="{{ . }}" 
+                 class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105" 
+                 alt="{{ $.Title }}" 
+                 loading="lazy" 
+                 decoding="async">
+          </a>
+          {{- else }}
+          <a href="{{ .RelPermalink }}" class="flex items-center justify-center w-full h-full bg-linear-to-br from-blue-100 to-cyan-100 dark:from-slate-700 dark:to-slate-600">
+            <svg class="w-12 h-12 text-gray-400 dark:text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z"></path>
+            </svg>
+          </a>
+          {{- end }}
+        </div>
+        
+        {{- /* 内容 */ -}}
+        <div class="p-4">
+          <time class="text-xs text-muted dark:text-slate-500" datetime="{{ .Date.Format "2006-01-02" }}">
+            {{ .Date.Format "2006-01-02" }}
+          </time>
+          <h3 class="mt-1 text-base font-semibold leading-tight dark:text-slate-200 line-clamp-2">
+            <a href="{{ .RelPermalink }}" class="hover:text-primary dark:hover:text-blue-400 transition">
+              {{ .Title }}
+            </a>
+          </h3>
+        </div>
+      </article>
+      {{- end }}
+    </div>
+    
+    {{- /* 查看全部链接 */ -}}
+    <div class="mt-8 text-center">
+      <a href="{{ "/posts/" | relLangURL }}" 
+         class="inline-flex items-center text-primary dark:text-blue-400 hover:underline font-medium">
+        {{ i18n "view_all" | default "View All Posts" }}
+        <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+        </svg>
+      </a>
+    </div>
+  </div>
+</section>
+{{- end }}

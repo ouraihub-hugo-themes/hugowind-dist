@@ -1,0 +1,181 @@
+# English menu configuration
+# 参考: astrowind/src/navigation.ts
+
+# ===== Homes 下拉菜单 =====
+[[main]]
+  identifier = "homes"
+  name = "Homes"
+  weight = 1
+
+[[main]]
+  parent = "homes"
+  name = "SaaS"
+  pageRef = "/homes/saas/"
+  weight = 1
+
+[[main]]
+  parent = "homes"
+  name = "Startup"
+  pageRef = "/homes/startup/"
+  weight = 2
+
+[[main]]
+  parent = "homes"
+  name = "Mobile App"
+  pageRef = "/homes/mobile-app/"
+  weight = 3
+
+[[main]]
+  parent = "homes"
+  name = "Personal"
+  pageRef = "/homes/personal/"
+  weight = 4
+
+# ===== Pages 下拉菜单 =====
+[[main]]
+  identifier = "pages"
+  name = "Pages"
+  weight = 2
+
+[[main]]
+  parent = "pages"
+  name = "Features (Anchor Link)"
+  url = "/#features"
+  weight = 1
+
+[[main]]
+  parent = "pages"
+  name = "Services"
+  pageRef = "/services/"
+  weight = 2
+
+[[main]]
+  parent = "pages"
+  name = "Pricing"
+  pageRef = "/pricing/"
+  weight = 3
+
+[[main]]
+  parent = "pages"
+  name = "About us"
+  pageRef = "/about/"
+  weight = 4
+
+[[main]]
+  parent = "pages"
+  name = "Contact"
+  pageRef = "/contact/"
+  weight = 5
+
+[[main]]
+  parent = "pages"
+  name = "Terms"
+  pageRef = "/terms/"
+  weight = 6
+
+[[main]]
+  parent = "pages"
+  name = "Privacy policy"
+  pageRef = "/privacy/"
+  weight = 7
+
+# ===== Landing 下拉菜单 =====
+[[main]]
+  identifier = "landing"
+  name = "Landing"
+  weight = 3
+
+[[main]]
+  parent = "landing"
+  name = "Lead Generation"
+  pageRef = "/landing/lead-generation/"
+  weight = 1
+
+[[main]]
+  parent = "landing"
+  name = "Long-form Sales"
+  pageRef = "/landing/sales/"
+  weight = 2
+
+[[main]]
+  parent = "landing"
+  name = "Click-Through"
+  pageRef = "/landing/click-through/"
+  weight = 3
+
+[[main]]
+  parent = "landing"
+  name = "Product Details (or Services)"
+  pageRef = "/landing/product/"
+  weight = 4
+
+[[main]]
+  parent = "landing"
+  name = "Coming Soon or Pre-Launch"
+  pageRef = "/landing/pre-launch/"
+  weight = 5
+
+[[main]]
+  parent = "landing"
+  name = "Subscription"
+  pageRef = "/landing/subscription/"
+  weight = 6
+
+# ===== Blog 下拉菜单 =====
+[[main]]
+  identifier = "blog"
+  name = "Blog"
+  weight = 4
+
+[[main]]
+  parent = "blog"
+  name = "Blog List"
+  pageRef = "/blog/"
+  weight = 1
+
+[[main]]
+  parent = "blog"
+  name = "Article"
+  pageRef = "/get-started-website-with-astro-tailwind-css/"
+  weight = 2
+
+[[main]]
+  parent = "blog"
+  name = "Article (with MDX)"
+  pageRef = "/markdown-elements-demo-post/"
+  weight = 3
+
+[[main]]
+  parent = "blog"
+  name = "Category Page"
+  pageRef = "/category/tutorials/"
+  weight = 4
+
+[[main]]
+  parent = "blog"
+  name = "Tag Page"
+  pageRef = "/tag/astro/"
+  weight = 5
+
+# ===== Widgets 单独链接 =====
+[[main]]
+  name = "Widgets"
+  url = "#"
+  weight = 5
+
+# ===== Header Actions =====
+[[actions]]
+  name = "Download"
+  url = "https://github.com/onwidget/astrowind"
+  weight = 1
+
+# ===== Footer Links =====
+[[footer]]
+  name = "Terms"
+  pageRef = "/terms/"
+  weight = 1
+
+[[footer]]
+  name = "Privacy Policy"
+  pageRef = "/privacy/"
+  weight = 2

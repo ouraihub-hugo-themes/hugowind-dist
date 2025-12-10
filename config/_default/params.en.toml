@@ -1,0 +1,64 @@
+# HugoWind English Parameters Configuration
+# 参考: astrowind/src/config.yaml
+
+# Site description for SEO
+description = "🚀 Suitable for Startups, Small Business, Sass Websites, Professional Portfolios, Marketing Websites, Landing Pages & Blogs."
+
+# Author information
+[author]
+  description = "A passionate developer and content creator"
+
+# Hero section - 复刻 AstroWind 首页 Hero
+[hero]
+  title = "Free template for creating websites with"
+  highlight = "Hugo"
+  titleSuffix = "+ Tailwind CSS"
+  subtitle = "HugoWind is a free, customizable and production-ready template for Hugo + Tailwind CSS. Suitable for Startups, Small Business, SaaS websites, Professional Portfolios, Marketing websites, Landing Pages & Blogs."
+  tagline = "Hugo Theme"
+  
+  [hero.primaryCTA]
+    text = "Get template"
+    
+  [hero.secondaryCTA]
+    text = "Learn more"
+
+# Features section
+[features]
+  title = "What you get with HugoWind"
+  subtitle = "One of the most professional and comprehensive templates currently on the market. Most starred & forked Hugo theme in 2024."
+  tagline = "Features"
+
+# Content section
+[content]
+  title = "High impact content"
+  subtitle = "Ensure your website's success with content that your audience can't ignore."
+
+# Steps section
+[steps]
+  title = "Get your dream website up and running in no time with HugoWind."
+
+# Blog section
+[blog]
+  title = "Find out more content in our Blog"
+  subtitle = "The blog is used to display HugoWind documentation. Each new article will be an important step that you will need to know to be an expert in creating a website using Hugo + Tailwind CSS."
+  tagline = "Blog"
+  linkText = "View all posts"
+
+# FAQs section
+[faqs]
+  title = "Frequently Asked Questions"
+  subtitle = "Dive into the following questions to gain insights into the powerful features that HugoWind offers and how it can elevate your web development journey."
+  tagline = "FAQs"
+
+# Stats section
+[stats]
+  title = "Statistics"
+
+# Call to Action section
+[cta]
+  title = "HugoWind: Elevate your online presence"
+  subtitle = "Be very surprised by these huge fake numbers you are seeing on this page."
+
+# Footer
+[footer]
+  copyright = "Made by onWidget · All rights reserved."

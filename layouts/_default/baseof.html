@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="{{ .Site.Language.Lang }}" dir="{{ .Site.Language.Params.textDirection | default "ltr" }}" class="scroll-smooth 2xl:text-[20px]">
+<head>
+  {{- partial "head/meta.html" . -}}
+  {{- partial "head/seo.html" . -}}
+  {{- partial "head/performance.html" . -}}
+  {{- partial "head/assets.html" . -}}
+  {{- block "head" . }}{{- end }}
+</head>
+<body class="antialiased text-default bg-page tracking-tight">
+  {{- partial "header/main.html" . -}}
+  
+  <main id="main-content">
+    {{- block "main" . }}{{- end }}
+  </main>
+  
+  {{- partial "footer/main.html" . -}}
+  {{- partial "search/modal.html" . -}}
+  {{- partial "scripts/main.html" . -}}
+  {{- block "scripts" . }}{{- end }}
+</body>
+</html>

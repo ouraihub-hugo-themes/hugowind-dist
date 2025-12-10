@@ -1,0 +1,120 @@
+{{- /*
+  图片优化 Partial
+  需求: 5.2 - 图片优化和 WebP 转换
+  
+  参数:
+  - src: 图片路径（必需）
+  - alt: 替代文本（必需）
+  - width: 目标宽度（可选，默认 auto）
+  - height: 目标高度（可选）
+  - class: CSS 类（可选）
+  - loading: 加载策略（可选，默认 lazy）
+  - sizes: 响应式尺寸（可选）
+  - priority: 是否为关键图片（可选，用于 LCP 优化）
+*/ -}}
+
+{{- $src := .src -}}
+{{- $alt := .alt | default "" -}}
+{{- $class := .class | default "" -}}
+{{- $width := .width -}}
+{{- $height := .height -}}
+{{- $loading := .loading | default "lazy" -}}
+{{- $sizes := .sizes | default "(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw" -}}
+{{- $priority := .priority | default false -}}
+{{- $page := .page -}}
+
+{{- /* 关键图片不使用懒加载 */ -}}
+{{- if $priority }}
+  {{- $loading = "eager" -}}
+{{- end }}
+
+{{- /* 尝试获取图片资源 */ -}}
+{{- $image := "" -}}
+{{- if $page }}
+  {{- $image = $page.Resources.GetMatch $src -}}
+{{- end }}
+{{- if not $image }}
+  {{- $image = resources.Get $src -}}
+{{- end }}
+
+{{- if $image -}}
+  {{- /* 生成多种尺寸的响应式图片 */ -}}
+  {{- $widths := slice 320 640 768 1024 1280 1536 -}}
+  {{- $webpSrcset := slice -}}
+  {{- $fallbackSrcset := slice -}}
+  
+  {{- /* 原始尺寸 */ -}}
+  {{- $originalWidth := $image.Width -}}
+  {{- $originalHeight := $image.Height -}}
+  
+  {{- /* 生成 srcset */ -}}
+  {{- range $w := $widths -}}
+    {{- if le $w $originalWidth -}}
+      {{- $resized := $image.Resize (printf "%dx webp q85" $w) -}}
+      {{- $webpSrcset = $webpSrcset | append (printf "%s %dw" $resized.RelPermalink $w) -}}
+      
+      {{- $fallbackResized := $image.Resize (printf "%dx q85" $w) -}}
+      {{- $fallbackSrcset = $fallbackSrcset | append (printf "%s %dw" $fallbackResized.RelPermalink $w) -}}
+    {{- end -}}
+  {{- end -}}
+  
+  {{- /* 默认图片（用于不支持 srcset 的浏览器） */ -}}
+  {{- $defaultWidth := 768 -}}
+  {{- if $width }}
+    {{- $defaultWidth = int $width -}}
+  {{- end }}
+  {{- if gt $defaultWidth $originalWidth }}
+    {{- $defaultWidth = $originalWidth -}}
+  {{- end }}
+  
+  {{- $webpDefault := $image.Resize (printf "%dx webp q85" $defaultWidth) -}}
+  {{- $fallbackDefault := $image.Resize (printf "%dx q85" $defaultWidth) -}}
+  
+  {{- /* 计算显示尺寸 */ -}}
+  {{- $displayWidth := $fallbackDefault.Width -}}
+  {{- $displayHeight := $fallbackDefault.Height -}}
+  {{- if $width }}
+    {{- $displayWidth = int $width -}}
+  {{- end }}
+  {{- if $height }}
+    {{- $displayHeight = int $height -}}
+  {{- end }}
+
+<picture>
+  {{- if gt (len $webpSrcset) 0 }}
+  <source 
+    type="image/webp" 
+    srcset="{{ delimit $webpSrcset ", " }}"
+    sizes="{{ $sizes }}"
+  >
+  {{- end }}
+  {{- if gt (len $fallbackSrcset) 0 }}
+  <source 
+    srcset="{{ delimit $fallbackSrcset ", " }}"
+    sizes="{{ $sizes }}"
+  >
+  {{- end }}
+  <img 
+    src="{{ $fallbackDefault.RelPermalink }}" 
+    alt="{{ $alt }}"
+    width="{{ $displayWidth }}"
+    height="{{ $displayHeight }}"
+    loading="{{ $loading }}"
+    decoding="{{ if $priority }}sync{{ else }}async{{ end }}"
+    {{- if $priority }} fetchpriority="high"{{ end }}
+    class="{{ $class }}"
+  >
+</picture>
+
+{{- else -}}
+  {{- /* 外部图片或找不到的图片 */ -}}
+  <img 
+    src="{{ $src }}" 
+    alt="{{ $alt }}"
+    {{ with $width }}width="{{ . }}"{{ end }}
+    {{ with $height }}height="{{ . }}"{{ end }}
+    loading="{{ $loading }}"
+    decoding="async"
+    class="{{ $class }}"
+  >
+{{- end -}}

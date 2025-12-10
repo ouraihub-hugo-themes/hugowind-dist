@@ -1,0 +1,189 @@
+{{- /* 
+  JSON-LD 结构化数据
+  需求: 10.2
+*/ -}}
+
+{{- $title := .Title | default .Site.Title -}}
+{{- $description := .Description | default .Params.description | default .Site.Params.description -}}
+{{- $siteName := .Site.Params.metadata.openGraph.siteName | default .Site.Title -}}
+
+{{- /* 获取图片 */ -}}
+{{- $image := "" -}}
+{{- with .Params.image }}{{ $image = . | absURL }}{{ end -}}
+{{- if not $image }}{{ with .Site.Params.metadata.openGraph.image }}{{ $image = .url | absURL }}{{ end }}{{ end -}}
+
+{{- /* 获取 Logo */ -}}
+{{- $logo := "" -}}
+{{- with .Site.Params.assets.logo }}{{ $logo = . | absURL }}{{ end -}}
+
+{{- /* ========== WebSite Schema (首页) ========== */ -}}
+{{- if .IsHome }}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "name": {{ $siteName }},
+  "url": {{ .Site.BaseURL }},
+  "description": {{ $description }},
+  "inLanguage": {{ .Site.Language.Lang }}
+  {{- with .Site.Params.author.name }},
+  "author": {
+    "@type": "Person",
+    "name": {{ . }}
+  }
+  {{- end }}
+  {{- if .Site.Params.search.enable }},
+  "potentialAction": {
+    "@type": "SearchAction",
+    "target": {
+      "@type": "EntryPoint",
+      "urlTemplate": "{{ .Site.BaseURL }}?q={search_term_string}"
+    },
+    "query-input": "required name=search_term_string"
+  }
+  {{- end }}
+}
+</script>
+
+{{- /* Organization Schema */ -}}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "name": {{ $siteName }},
+  "url": {{ .Site.BaseURL }}
+  {{- with $logo }},
+  "logo": {
+    "@type": "ImageObject",
+    "url": {{ . }}
+  }
+  {{- end }}
+  {{- with .Site.Params.social }}
+  {{- $socialLinks := slice -}}
+  {{- with .github }}{{ $socialLinks = $socialLinks | append . }}{{ end -}}
+  {{- with .twitter }}{{ $socialLinks = $socialLinks | append . }}{{ end -}}
+  {{- with .facebook }}{{ $socialLinks = $socialLinks | append . }}{{ end -}}
+  {{- with .linkedin }}{{ $socialLinks = $socialLinks | append . }}{{ end -}}
+  {{- with .instagram }}{{ $socialLinks = $socialLinks | append . }}{{ end -}}
+  {{- with .youtube }}{{ $socialLinks = $socialLinks | append . }}{{ end -}}
+  {{- if gt (len $socialLinks) 0 }},
+  "sameAs": {{ $socialLinks | jsonify }}
+  {{- end }}
+  {{- end }}
+}
+</script>
+{{- end }}
+
+{{- /* ========== Article Schema (文章页) ========== */ -}}
+{{- if and .IsPage (eq .Section "posts") }}
+{{- $authorName := "Anonymous" -}}
+{{- with .Site.Params.author.name }}{{ $authorName = . }}{{ end -}}
+{{- with .Params.author }}
+  {{- if reflect.IsMap . }}
+    {{- with .name }}{{ $authorName = . }}{{ end -}}
+  {{- else }}
+    {{- $authorName = . -}}
+  {{- end }}
+{{- end }}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": {{ .Permalink }}
+  },
+  "headline": {{ $title }},
+  "description": {{ $description }},
+  "url": {{ .Permalink }},
+  "datePublished": "{{ .PublishDate.Format "2006-01-02T15:04:05Z07:00" }}",
+  "dateModified": "{{ .Lastmod.Format "2006-01-02T15:04:05Z07:00" }}",
+  "inLanguage": {{ .Site.Language.Lang }},
+  "author": {
+    "@type": "Person",
+    "name": {{ $authorName }}
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": {{ $siteName }}
+    {{- with $logo }},
+    "logo": {
+      "@type": "ImageObject",
+      "url": {{ . }}
+    }
+    {{- end }}
+  }
+  {{- with $image }},
+  "image": {
+    "@type": "ImageObject",
+    "url": {{ . }}
+  }
+  {{- end }}
+  {{- with .Params.tags }},
+  "keywords": {{ delimit . ", " }}
+  {{- end }}
+  {{- with .WordCount }},
+  "wordCount": {{ . }}
+  {{- end }}
+}
+</script>
+{{- end }}
+
+{{- /* ========== BreadcrumbList Schema ========== */ -}}
+{{- if not .IsHome }}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": {{ (i18n "home" | default "Home") }},
+      "item": {{ .Site.BaseURL }}
+    }
+    {{- if .Parent }}
+    {{- $parent := .Parent }}
+    ,{
+      "@type": "ListItem",
+      "position": 2,
+      "name": {{ $parent.Title }},
+      "item": {{ $parent.Permalink }}
+    }
+    ,{
+      "@type": "ListItem",
+      "position": 3,
+      "name": {{ $title }},
+      "item": {{ .Permalink }}
+    }
+    {{- else }}
+    ,{
+      "@type": "ListItem",
+      "position": 2,
+      "name": {{ $title }},
+      "item": {{ .Permalink }}
+    }
+    {{- end }}
+  ]
+}
+</script>
+{{- end }}
+
+{{- /* ========== WebPage Schema (普通页面) ========== */ -}}
+{{- if and .IsPage (ne .Section "posts") (not .IsHome) }}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebPage",
+  "name": {{ $title }},
+  "url": {{ .Permalink }},
+  "description": {{ $description }},
+  "inLanguage": {{ .Site.Language.Lang }},
+  "isPartOf": {
+    "@type": "WebSite",
+    "name": {{ $siteName }},
+    "url": {{ .Site.BaseURL }}
+  }
+}
+</script>
+{{- end }}

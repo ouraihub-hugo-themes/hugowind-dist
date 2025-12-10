@@ -1,0 +1,39 @@
+{{- /*
+  获取指定语言的翻译页面
+  
+  使用方式: {{ partial "i18n/get-translation.html" (dict "page" . "lang" "en") }}
+  
+  参数:
+  - page: 当前页面
+  - lang: 目标语言代码
+  
+  返回:
+  - 翻译页面对象，如果不存在则返回 nil
+*/ -}}
+
+{{- $page := .page -}}
+{{- $targetLang := .lang -}}
+{{- $result := "" -}}
+
+{{- /* 检查当前页面是否有翻译 */ -}}
+{{- if $page.IsTranslated -}}
+  {{- range $page.Translations -}}
+    {{- if eq .Language.Lang $targetLang -}}
+      {{- $result = . -}}
+    {{- end -}}
+  {{- end -}}
+{{- end -}}
+
+{{- /* 如果没有找到翻译，尝试通过 translationKey 查找 */ -}}
+{{- if not $result -}}
+  {{- with $page.Params.translationKey -}}
+    {{- $translationKey := . -}}
+    {{- range site.AllPages -}}
+      {{- if and (eq .Language.Lang $targetLang) (eq .Params.translationKey $translationKey) -}}
+        {{- $result = . -}}
+      {{- end -}}
+    {{- end -}}
+  {{- end -}}
+{{- end -}}
+
+{{- return $result -}}

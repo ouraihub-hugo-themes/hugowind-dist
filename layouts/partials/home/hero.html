@@ -1,0 +1,137 @@
+{{- /* 
+  Hero 组件 - 精确复刻 AstroWind Hero.astro
+  参考: astrowind/src/components/widgets/Hero.astro
+  需求: 11.2, 11.4, 2.1
+*/ -}}
+
+{{- $hero := .Site.Params.hero -}}
+{{- if $hero.enable -}}
+<section class="relative md:-mt-[76px] not-prose" {{ with $hero.id }}id="{{ . }}"{{ end }}>
+  {{- /* 背景层 - 渐变和装饰元素 */ -}}
+  <div class="absolute inset-0 pointer-events-none" aria-hidden="true">
+    {{- /* 背景渐变效果 - 复刻 AstroWind 的渐变 */ -}}
+    <div class="absolute inset-0 bg-linear-to-br from-blue-50 via-white to-cyan-50 dark:from-slate-900 dark:via-slate-900 dark:to-slate-800"></div>
+    
+    {{- /* 装饰元素 - blob 形状动画 */ -}}
+    <div class="absolute inset-0 overflow-hidden">
+      {{- /* 右上角 blob */ -}}
+      <div class="absolute -top-40 -right-32 w-80 h-80 bg-linear-to-br from-blue-400/30 to-cyan-400/30 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob dark:mix-blend-normal dark:opacity-30"></div>
+      {{- /* 左下角 blob */ -}}
+      <div class="absolute -bottom-40 -left-32 w-80 h-80 bg-linear-to-br from-purple-400/30 to-pink-400/30 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob animation-delay-2000 dark:mix-blend-normal dark:opacity-30"></div>
+      {{- /* 中间 blob */ -}}
+      <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-linear-to-br from-cyan-400/20 to-blue-400/20 rounded-full mix-blend-multiply filter blur-2xl opacity-50 animate-blob animation-delay-4000 dark:mix-blend-normal dark:opacity-20"></div>
+    </div>
+  </div>
+
+  {{- /* 内容容器 */ -}}
+  <div class="relative max-w-7xl mx-auto px-4 sm:px-6">
+    {{- /* 顶部间距 - 补偿 header 高度 */ -}}
+    <div class="pt-0 md:pt-[76px] pointer-events-none"></div>
+    
+    <div class="py-12 md:py-20 lg:py-24">
+      {{- /* 文字内容区域 */ -}}
+      <div class="text-center pb-10 md:pb-16 max-w-5xl mx-auto">
+        
+        {{- /* Tagline - 可选的标签行 */ -}}
+        {{- with $hero.tagline -}}
+        <p class="text-base text-secondary dark:text-blue-200 font-bold tracking-wide uppercase mb-4 intersect-once motion-safe:md:opacity-0 motion-safe:md:intersect:animate-fade">
+          {{ . }}
+        </p>
+        {{- end -}}
+        
+        {{- /* 主标题 - 复刻 AstroWind 的排版样式 */ -}}
+        <h1 class="text-5xl md:text-6xl font-bold leading-tighter tracking-tighter mb-4 font-heading dark:text-gray-200 intersect-once motion-safe:md:opacity-0 motion-safe:md:intersect:animate-fade">
+          {{ $hero.title | default "Free template for" }}
+          {{- with $hero.highlight }}
+          <span class="text-accent dark:text-white"> {{ . }}</span>
+          {{- end }}
+          {{- with $hero.titleSuffix }}
+          {{ . }}
+          {{- end }}
+        </h1>
+        
+        {{- /* 副标题 */ -}}
+        {{- with $hero.subtitle -}}
+        <div class="max-w-3xl mx-auto">
+          <p class="text-xl text-muted mb-6 dark:text-slate-300 intersect-once motion-safe:md:opacity-0 motion-safe:md:intersect:animate-fade">
+            {{ . }}
+          </p>
+        </div>
+        {{- end -}}
+        
+        {{- /* CTA 按钮组 */ -}}
+        <div class="max-w-xs sm:max-w-md m-auto flex flex-nowrap flex-col sm:flex-row sm:justify-center gap-4 intersect-once motion-safe:md:opacity-0 motion-safe:md:intersect:animate-fade">
+          {{- /* 主要 CTA 按钮 */ -}}
+          {{- with $hero.primaryCTA -}}
+          <div class="flex w-full sm:w-auto">
+            <a class="btn btn-primary w-full sm:mb-0" 
+               href="{{ .link }}" 
+               {{ if hasPrefix .link "http" }}target="_blank" rel="noopener noreferrer"{{ end }}>
+              {{- .text -}}
+              {{- with .icon -}}
+              <svg class="w-5 h-5 ml-1 -mr-1.5 rtl:mr-1 rtl:-ml-1.5 inline-block" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
+              </svg>
+              {{- end -}}
+            </a>
+          </div>
+          {{- end -}}
+          
+          {{- /* 次要 CTA 按钮 */ -}}
+          {{- with $hero.secondaryCTA -}}
+          <div class="flex w-full sm:w-auto">
+            <a class="btn w-full" 
+               href="{{ .link }}"
+               {{ if hasPrefix .link "http" }}target="_blank" rel="noopener noreferrer"{{ end }}>
+              {{- .text -}}
+            </a>
+          </div>
+          {{- end -}}
+        </div>
+        
+        {{- /* 额外内容区域 */ -}}
+        {{- with $hero.content -}}
+        <div class="mt-8">
+          {{ . | safeHTML }}
+        </div>
+        {{- end -}}
+      </div>
+      
+      {{- /* Hero 图片区域 */ -}}
+      {{- with $hero.image -}}
+      <div class="intersect-once intersect-no-queue motion-safe:md:opacity-0 motion-safe:md:intersect:animate-fade">
+        <div class="relative m-auto max-w-5xl">
+          {{ $imgSrc := . }}
+          {{ if reflect.IsMap . }}
+            {{ $imgSrc = .src }}
+          {{ end }}
+          {{ $img := resources.Get $imgSrc }}
+          {{ if $img }}
+            {{ $webp := $img.Resize "1024x webp" }}
+            <picture>
+              <source srcset="{{ $webp.RelPermalink }}" type="image/webp">
+              <img 
+                src="{{ $img.RelPermalink }}" 
+                alt="{{ if reflect.IsMap . }}{{ .alt | default "Hero image" }}{{ else }}Hero image{{ end }}"
+                class="mx-auto rounded-md w-full"
+                width="{{ $img.Width }}"
+                height="{{ $img.Height }}"
+                loading="eager"
+              >
+            </picture>
+          {{ else }}
+            {{- /* 如果图片不在 assets 中，直接使用路径 */ -}}
+            <img 
+              src="{{ $imgSrc }}" 
+              alt="{{ if reflect.IsMap . }}{{ .alt | default "Hero image" }}{{ else }}Hero image{{ end }}"
+              class="mx-auto rounded-md w-full"
+              loading="eager"
+            >
+          {{ end }}
+        </div>
+      </div>
+      {{- end -}}
+    </div>
+  </div>
+</section>
+{{- end -}}

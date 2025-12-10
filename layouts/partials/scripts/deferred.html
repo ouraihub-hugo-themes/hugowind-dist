@@ -1,0 +1,86 @@
+{{- /*
+  延迟加载脚本
+  需求: 5.1 - FID 优化
+  
+  将非关键脚本延迟到页面加载完成后执行
+  减少主线程阻塞，优化首次输入延迟
+*/ -}}
+
+<script data-search-enabled="{{ .Site.Params.search.enable | default false }}">
+(function() {
+  'use strict';
+  
+  // 延迟加载配置
+  var DELAY_MS = 2000;
+  var loaded = false;
+  
+  // 从 script 标签读取配置
+  var currentScript = document.currentScript;
+  var searchEnabled = currentScript && currentScript.getAttribute('data-search-enabled') === 'true';
+  var deferredScripts = [];
+  if (searchEnabled) {
+    deferredScripts.push({ src: '/_pagefind/pagefind-ui.js', type: 'module' });
+  }
+  
+  // 加载单个脚本
+  function loadScript(config) {
+    return new Promise(function(resolve, reject) {
+      var script = document.createElement('script');
+      script.src = config.src;
+      if (config.type) script.type = config.type;
+      if (config.async !== false) script.async = true;
+      script.onload = resolve;
+      script.onerror = reject;
+      document.body.appendChild(script);
+    });
+  }
+  
+  // 加载所有延迟脚本
+  function loadDeferredScripts() {
+    if (loaded) return;
+    loaded = true;
+    
+    deferredScripts.forEach(function(config) {
+      loadScript(config).catch(function(err) {
+        console.warn('Failed to load deferred script:', config.src, err);
+      });
+    });
+  }
+  
+  // 触发条件：用户交互或超时
+  function setupTriggers() {
+    var events = ['mouseover', 'touchstart', 'scroll', 'keydown'];
+    
+    function onInteraction() {
+      loadDeferredScripts();
+      events.forEach(function(event) {
+        document.removeEventListener(event, onInteraction);
+      });
+    }
+    
+    // 用户交互触发
+    events.forEach(function(event) {
+      document.addEventListener(event, onInteraction, { once: true, passive: true });
+    });
+    
+    // 超时触发
+    setTimeout(loadDeferredScripts, DELAY_MS);
+    
+    // 页面完全加载后触发
+    if (document.readyState === 'complete') {
+      setTimeout(loadDeferredScripts, 100);
+    } else {
+      window.addEventListener('load', function() {
+        setTimeout(loadDeferredScripts, 100);
+      });
+    }
+  }
+  
+  // 初始化
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', setupTriggers);
+  } else {
+    setupTriggers();
+  }
+})();
+</script>

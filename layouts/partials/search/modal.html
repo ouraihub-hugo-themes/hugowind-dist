@@ -1,0 +1,100 @@
+{{- /* 搜索模态框 - 复刻 AstroWind 搜索界面风格 */ -}}
+{{- if .Site.Params.search.enable -}}
+<div id="search-modal" class="fixed inset-0 z-50 hidden opacity-0 transition-opacity duration-300" aria-modal="true" role="dialog">
+  {{- /* 遮罩层 */ -}}
+  <div class="search-overlay absolute inset-0 bg-black/50 backdrop-blur-sm"></div>
+  
+  {{- /* 搜索对话框 */ -}}
+  <div class="relative flex items-start justify-center pt-[10vh] px-4">
+    <div class="search-dialog w-full max-w-2xl bg-white dark:bg-gray-900 rounded-xl shadow-2xl overflow-hidden transform scale-95 transition-transform duration-300">
+      {{- /* 搜索头部 */ -}}
+      <div class="flex items-center gap-3 p-4 border-b border-gray-200 dark:border-gray-700">
+        {{- /* 搜索图标 */ -}}
+        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-muted" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+          <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+          <path d="M10 10m-7 0a7 7 0 1 0 14 0a7 7 0 1 0 -14 0"></path>
+          <path d="M21 21l-6 -6"></path>
+        </svg>
+        
+        {{- /* 搜索输入框 */ -}}
+        <input 
+          type="text" 
+          id="search-input"
+          class="flex-1 bg-transparent border-none outline-none text-lg text-default placeholder-muted"
+          placeholder="{{ i18n "search_placeholder" | default "搜索文章..." }}"
+          aria-label="{{ i18n "search" | default "搜索" }}"
+          autocomplete="off"
+        >
+        
+        {{- /* 加载指示器 */ -}}
+        <div id="search-loading" class="hidden">
+          <svg class="animate-spin w-5 h-5 text-primary" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+          </svg>
+        </div>
+        
+        {{- /* 关闭按钮 */ -}}
+        <button 
+          type="button" 
+          data-search-close
+          class="p-1.5 rounded-lg text-muted hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+          aria-label="{{ i18n "nav_close" | default "关闭" }}"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+            <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+            <path d="M18 6l-12 12"></path>
+            <path d="M6 6l12 12"></path>
+          </svg>
+        </button>
+      </div>
+      
+      {{- /* 快捷键提示 */ -}}
+      <div class="px-4 py-2 text-xs text-muted border-b border-gray-200 dark:border-gray-700 flex items-center gap-4">
+        <span class="flex items-center gap-1">
+          <kbd class="px-1.5 py-0.5 bg-gray-100 dark:bg-gray-800 rounded text-xs">ESC</kbd>
+          <span>{{ i18n "nav_close" | default "关闭" }}</span>
+        </span>
+        <span class="flex items-center gap-1">
+          <kbd class="px-1.5 py-0.5 bg-gray-100 dark:bg-gray-800 rounded text-xs">↵</kbd>
+          <span>{{ i18n "search_select" | default "选择" }}</span>
+        </span>
+      </div>
+      
+      {{- /* 搜索结果 */ -}}
+      <div class="max-h-[60vh] overflow-y-auto">
+        <div id="search-results" class="p-4"></div>
+        <div id="search-stats" class="px-4 pb-4"></div>
+      </div>
+      
+      {{- /* 底部 Pagefind 标识 */ -}}
+      <div class="px-4 py-3 border-t border-gray-200 dark:border-gray-700 text-xs text-muted text-center">
+        {{ i18n "search_powered_by" | default "搜索由" }} <a href="https://pagefind.app" target="_blank" rel="noopener" class="text-primary hover:underline">Pagefind</a> {{ i18n "search_powered_by_suffix" | default "提供支持" }}
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  #search-modal.show {
+    display: flex;
+    opacity: 1;
+  }
+  
+  #search-modal.show .search-dialog {
+    transform: scale(1);
+  }
+  
+  .search-result-item a {
+    display: block;
+  }
+  
+  .search-result-item:hover {
+    background-color: rgb(243 244 246);
+  }
+  
+  .dark .search-result-item:hover {
+    background-color: rgb(31 41 55);
+  }
+</style>
+{{- end -}}

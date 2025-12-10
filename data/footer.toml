@@ -1,0 +1,132 @@
+# 页脚数据配置
+# 参考: astrowind/src/navigation.ts footerData
+
+# 主题设置 (light 或 dark)
+theme = "light"
+
+# ===== 次要链接 (Terms, Privacy 等) =====
+[[secondaryLinks]]
+  text = "Terms"
+  href = "/terms"
+
+[[secondaryLinks]]
+  text = "Privacy Policy"
+  href = "/privacy"
+
+# ===== Product 列 =====
+[[links]]
+  title = "Product"
+  [[links.items]]
+    text = "Features"
+    href = "#"
+  [[links.items]]
+    text = "Security"
+    href = "#"
+  [[links.items]]
+    text = "Team"
+    href = "#"
+  [[links.items]]
+    text = "Enterprise"
+    href = "#"
+  [[links.items]]
+    text = "Customer stories"
+    href = "#"
+  [[links.items]]
+    text = "Pricing"
+    href = "#"
+  [[links.items]]
+    text = "Resources"
+    href = "#"
+
+# ===== Platform 列 =====
+[[links]]
+  title = "Platform"
+  [[links.items]]
+    text = "Developer API"
+    href = "#"
+  [[links.items]]
+    text = "Partners"
+    href = "#"
+  [[links.items]]
+    text = "Atom"
+    href = "#"
+  [[links.items]]
+    text = "Electron"
+    href = "#"
+  [[links.items]]
+    text = "AstroWind Desktop"
+    href = "#"
+
+# ===== Support 列 =====
+[[links]]
+  title = "Support"
+  [[links.items]]
+    text = "Docs"
+    href = "#"
+  [[links.items]]
+    text = "Community Forum"
+    href = "#"
+  [[links.items]]
+    text = "Professional Services"
+    href = "#"
+  [[links.items]]
+    text = "Skills"
+    href = "#"
+  [[links.items]]
+    text = "Status"
+    href = "#"
+
+# ===== Company 列 =====
+[[links]]
+  title = "Company"
+  [[links.items]]
+    text = "About"
+    href = "#"
+  [[links.items]]
+    text = "Blog"
+    href = "#"
+  [[links.items]]
+    text = "Careers"
+    href = "#"
+  [[links.items]]
+    text = "Press"
+    href = "#"
+  [[links.items]]
+    text = "Inclusion"
+    href = "#"
+  [[links.items]]
+    text = "Social Impact"
+    href = "#"
+  [[links.items]]
+    text = "Shop"
+    href = "#"
+
+# ===== 社交链接 =====
+[[socialLinks]]
+  ariaLabel = "X"
+  icon = "tabler:brand-x"
+  href = "#"
+
+[[socialLinks]]
+  ariaLabel = "Instagram"
+  icon = "tabler:brand-instagram"
+  href = "#"
+
+[[socialLinks]]
+  ariaLabel = "Facebook"
+  icon = "tabler:brand-facebook"
+  href = "#"
+
+[[socialLinks]]
+  ariaLabel = "RSS"
+  icon = "tabler:rss"
+  href = "/rss.xml"
+
+[[socialLinks]]
+  ariaLabel = "Github"
+  icon = "tabler:brand-github"
+  href = "https://github.com/onwidget/astrowind"
+
+# ===== 页脚备注 =====
+[footNote]
+  text = 'Made by <a class="text-blue-600 underline dark:text-muted" href="https://onwidget.com/">onWidget</a> · All rights reserved.'

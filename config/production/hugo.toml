@@ -1,0 +1,46 @@
+# 生产环境配置
+# 需求: 5.2 - 资源优化
+
+# 启用所有压缩
+[minify]
+  disableCSS = false
+  disableHTML = false
+  disableJS = false
+  disableJSON = false
+  disableSVG = false
+  disableXML = false
+  minifyOutput = true
+  [minify.tdewolff]
+    [minify.tdewolff.html]
+      keepWhitespace = false
+      keepEndTags = true
+      keepQuotes = false
+      keepConditionalComments = false
+      keepDefaultAttrVals = true
+      keepDocumentTags = true
+    [minify.tdewolff.css]
+      precision = 0
+      keepCSS2 = true
+    [minify.tdewolff.js]
+      precision = 0
+      keepVarNames = false
+    [minify.tdewolff.svg]
+      precision = 0
+      keepComments = false
+
+# 生产环境构建配置
+[build]
+  writeStats = true
+  useResourceCacheWhen = 'fallback'
+
+# 生产环境缓存配置 - 更长的缓存时间
+[caches]
+  [caches.images]
+    dir = ':resourceDir/_gen'
+    maxAge = '8760h'  # 1 年
+  [caches.assets]
+    dir = ':resourceDir/_gen'
+    maxAge = '8760h'  # 1 年
+  [caches.getresource]
+    dir = ':resourceDir/_gen'
+    maxAge = '8760h'

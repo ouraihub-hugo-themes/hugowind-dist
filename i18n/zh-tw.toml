@@ -1,0 +1,295 @@
+# 繁體中文翻譯
+# 參考: AstroWind UI 文本
+
+# ===== 導航 =====
+[nav_home]
+other = "首頁"
+
+[nav_blog]
+other = "部落格"
+
+[nav_about]
+other = "關於"
+
+[nav_contact]
+other = "聯繫我們"
+
+[nav_services]
+other = "服務"
+
+[nav_pricing]
+other = "定價"
+
+[nav_menu]
+other = "選單"
+
+[nav_close]
+other = "關閉"
+
+# ===== 部落格 =====
+[read_more]
+other = "閱讀更多"
+
+[posted_on]
+other = "發佈於"
+
+[updated_on]
+other = "更新於"
+
+[reading_time]
+one = "{{ .Count }} 分鐘閱讀"
+other = "{{ .Count }} 分鐘閱讀"
+
+[word_count]
+one = "{{ .Count }} 字"
+other = "{{ .Count }} 字"
+
+[related_posts]
+other = "相關文章"
+
+[categories]
+other = "分類"
+
+[tags]
+other = "標籤"
+
+[series]
+other = "系列"
+
+[no_posts]
+other = "暫無文章"
+
+[prev_page]
+other = "上一頁"
+
+[next_page]
+other = "下一頁"
+
+[prev_post]
+other = "上一篇"
+
+[next_post]
+other = "下一篇"
+
+[all_posts]
+other = "所有文章"
+
+[view_all]
+other = "檢視全部"
+
+[author]
+other = "作者"
+
+# ===== 搜尋 =====
+[search]
+other = "搜尋"
+
+[search_placeholder]
+other = "搜尋..."
+
+[search_no_results]
+other = "未找到結果"
+
+[search_results]
+other = "搜尋結果"
+
+[search_results_for]
+other = "搜尋結果："
+
+[search_select]
+other = "選擇"
+
+[search_powered_by]
+other = "搜尋由"
+
+[search_powered_by_suffix]
+other = "提供支援"
+
+# ===== 主題 =====
+[theme_light]
+other = "淺色"
+
+[theme_dark]
+other = "深色"
+
+[theme_system]
+other = "跟隨系統"
+
+[theme_toggle]
+other = "切換主題"
+
+[toggleDarkMode]
+other = "切換深色/淺色模式"
+
+# ===== 語言 =====
+[language]
+other = "語言"
+
+[language_switch]
+other = "切換語言"
+
+[current_language]
+other = "目前語言"
+
+# ===== 頁尾 =====
+[footer_copyright]
+other = "保留所有權利。"
+
+[footer_powered_by]
+other = "由"
+
+[footer_terms]
+other = "服務條款"
+
+[footer_privacy]
+other = "隱私政策"
+
+# ===== 操作 =====
+[download]
+other = "下載"
+
+[get_started]
+other = "開始使用"
+
+[learn_more]
+other = "瞭解更多"
+
+[subscribe]
+other = "訂閱"
+
+[submit]
+other = "提交"
+
+[send]
+other = "傳送"
+
+[cancel]
+other = "取消"
+
+[confirm]
+other = "確認"
+
+# ===== Hero 區域 =====
+[hero_tagline]
+other = "Hugo 主題"
+
+[hero_cta_primary]
+other = "取得模板"
+
+[hero_cta_secondary]
+other = "瞭解更多"
+
+# ===== 功能特性區域 =====
+[features_tagline]
+other = "功能特性"
+
+[features_title]
+other = "HugoWind 為您提供"
+
+# ===== 部落格區域 =====
+[blog_tagline]
+other = "部落格"
+
+[blog_title]
+other = "在我們的部落格中發現更多內容"
+
+# ===== 常見問題區域 =====
+[faqs_tagline]
+other = "常見問題"
+
+[faqs_title]
+other = "常見問題解答"
+
+# ===== 聯繫區域 =====
+[contact_title]
+other = "聯繫我們"
+
+[contact_name]
+other = "姓名"
+
+[contact_email]
+other = "電子郵件"
+
+[contact_message]
+other = "留言"
+
+# ===== 其他 =====
+[toc]
+other = "目錄"
+
+[share]
+other = "分享"
+
+[back_to_top]
+other = "返回頂部"
+
+[loading]
+other = "載入中..."
+
+[error]
+other = "錯誤"
+
+[not_found]
+other = "頁面未找到"
+
+[not_found_message]
+other = "您訪問的頁面不存在。"
+
+[go_home]
+other = "返回首頁"
+
+# ===== 日期/時間 =====
+[published]
+other = "發佈"
+
+[last_updated]
+other = "最後更新"
+
+[minutes]
+one = "分鐘"
+other = "分鐘"
+
+[hours]
+one = "小時"
+other = "小時"
+
+[days]
+one = "天"
+other = "天"
+
+[ago]
+other = "前"
+
+# ===== 多語言 =====
+[available_languages]
+other = "其他語言版本"
+
+[translation_notice]
+other = "此頁面也有其他語言版本"
+
+[no_translation]
+other = "此頁面暫無您的語言版本"
+
+[view_in_language]
+other = "檢視{{ .Language }}版本"
+
+# ===== 歸檔 =====
+[archive]
+other = "歸檔"
+
+[archive_title]
+other = "所有文章"
+
+[posts_in_year]
+one = "{{ .Count }} 篇文章"
+other = "{{ .Count }} 篇文章"
+
+# ===== 分頁 =====
+[page_of]
+other = "第 {{ .Current }} 頁，共 {{ .Total }} 頁"
+
+[first_page]
+other = "首頁"
+
+[last_page]
+other = "末頁"

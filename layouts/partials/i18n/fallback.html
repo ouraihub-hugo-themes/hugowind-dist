@@ -1,0 +1,30 @@
+{{- /*
+  语言回退机制组件
+  当当前语言缺少翻译时，提供回退到默认语言的功能
+  
+  使用方式: {{ partial "i18n/fallback.html" (dict "key" "some_key" "context" .) }}
+  
+  参数:
+  - key: i18n 翻译键
+  - context: 当前页面上下文
+  - default: 可选的默认值
+  
+  功能:
+  - 尝试获取当前语言的翻译
+  - 如果不存在，回退到默认语言
+  - 如果都不存在，使用提供的默认值或键名
+*/ -}}
+
+{{- $key := .key -}}
+{{- $context := .context | default . -}}
+{{- $default := .default | default $key -}}
+
+{{- /* 尝试获取当前语言的翻译 */ -}}
+{{- $translation := i18n $key -}}
+
+{{- /* 如果翻译为空，使用默认值 */ -}}
+{{- if $translation -}}
+  {{- $translation -}}
+{{- else -}}
+  {{- $default -}}
+{{- end -}}

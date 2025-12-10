@@ -1,0 +1,36 @@
+{{- /* 标签组件 - 参考 AstroWind Tags.astro */ -}}
+{{- $tags := .tags }}
+{{- $class := .class | default "text-sm" }}
+{{- $title := .title }}
+{{- $isCategory := .isCategory | default false }}
+{{- $limit := .limit | default 0 }}
+
+{{- if $tags }}
+<div class="flex flex-wrap items-center gap-2 {{ $class }}">
+  {{- with $title }}
+  <span class="font-normal underline underline-offset-4 decoration-2 dark:text-slate-400">
+    {{ . }}
+  </span>
+  {{- end }}
+  
+  {{- $displayTags := $tags }}
+  {{- if gt $limit 0 }}
+  {{- $displayTags = first $limit $tags }}
+  {{- end }}
+  
+  {{- range $displayTags }}
+  {{- $taxonomy := cond $isCategory "categories" "tags" }}
+  <a href="{{ printf "/%s/%s/" $taxonomy (. | urlize) | relLangURL }}" 
+     class="inline-block px-2 py-0.5 bg-gray-100 dark:bg-slate-700 text-muted dark:text-slate-300 hover:text-primary dark:hover:text-blue-400 rounded transition lowercase">
+    {{ . }}
+  </a>
+  {{- end }}
+  
+  {{- /* 显示更多标签的提示 */ -}}
+  {{- if and (gt $limit 0) (gt (len $tags) $limit) }}
+  <span class="text-muted dark:text-slate-500">
+    +{{ sub (len $tags) $limit }}
+  </span>
+  {{- end }}
+</div>
+{{- end }}

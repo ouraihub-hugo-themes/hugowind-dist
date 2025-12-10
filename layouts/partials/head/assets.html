@@ -1,0 +1,53 @@
+{{- /* 
+  资源优化配置
+  需求: 5.2 - CSS/JS 压缩和合并、资源缓存策略
+*/ -}}
+
+{{- /* CDN 配置 */ -}}
+{{- $cdnURL := .Site.Params.cdn.url | default "" -}}
+{{- $useCDN := and (hugo.IsProduction) (ne $cdnURL "") -}}
+
+{{- /* 关键 CSS 内联（提升 LCP） */ -}}
+{{- $criticalCSS := resources.Get "css/critical.css" -}}
+{{- if $criticalCSS }}
+<style>{{ $criticalCSS.Content | safeCSS }}</style>
+{{- end }}
+
+{{- /* 主样式文件 - Tailwind CSS 编译到 static/css/main.css */ -}}
+<link rel="stylesheet" href="{{ "css/main.css" | relURL }}">
+
+{{- /* 暗色模式初始化脚本 - 防止闪烁 (与 AstroWind ApplyColorMode 一致) */ -}}
+<script>
+  (function() {
+    var defaultTheme = '{{ .Site.Params.ui.theme | default "system" }}';
+    
+    function applyTheme(theme) {
+      if (theme === 'dark') {
+        document.documentElement.classList.add('dark');
+      } else {
+        document.documentElement.classList.remove('dark');
+      }
+      // 同步主题切换按钮状态
+      var matches = document.querySelectorAll('[data-aw-toggle-color-scheme] > input');
+      if (matches && matches.length) {
+        matches.forEach(function(elem) {
+          elem.checked = theme !== 'dark';
+        });
+      }
+    }
+    
+    // 处理固定主题模式 (如 'dark:only' 或 'light:only')
+    if (defaultTheme && defaultTheme.endsWith(':only')) {
+      applyTheme(defaultTheme.replace(':only', ''));
+    } else if (!localStorage.theme && defaultTheme !== 'system') {
+      applyTheme(defaultTheme);
+    } else if (
+      localStorage.theme === 'dark' ||
+      (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)
+    ) {
+      applyTheme('dark');
+    } else {
+      applyTheme('light');
+    }
+  })();
+</script>

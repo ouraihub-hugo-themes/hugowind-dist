@@ -1,0 +1,26 @@
+{{- /*
+  多语言翻译链接组件
+  用于在页面中显示其他语言版本的链接
+  
+  使用方式: {{ partial "i18n/translation-link.html" . }}
+  
+  功能:
+  - 显示当前页面的所有翻译版本
+  - 使用 translationKey 关联不同语言的页面
+  - 支持语言回退机制
+*/ -}}
+
+{{- if .IsTranslated }}
+<div class="translation-links flex items-center gap-2 text-sm text-muted dark:text-gray-400">
+  <span>{{ i18n "language" }}:</span>
+  {{- range .Translations }}
+  <a href="{{ .Permalink }}" 
+     class="inline-flex items-center gap-1 px-2 py-1 rounded hover:bg-gray-100 dark:hover:bg-gray-700 transition"
+     hreflang="{{ .Language.Lang }}"
+     lang="{{ .Language.Lang }}">
+    {{- with .Language.Params.languageFlag }}{{ . }}{{ end }}
+    <span>{{ .Language.LanguageName }}</span>
+  </a>
+  {{- end }}
+</div>
+{{- end }}

@@ -1,0 +1,295 @@
+# English translations
+# 参考: AstroWind UI 文本
+
+# ===== Navigation =====
+[nav_home]
+other = "Home"
+
+[nav_blog]
+other = "Blog"
+
+[nav_about]
+other = "About"
+
+[nav_contact]
+other = "Contact"
+
+[nav_services]
+other = "Services"
+
+[nav_pricing]
+other = "Pricing"
+
+[nav_menu]
+other = "Menu"
+
+[nav_close]
+other = "Close"
+
+# ===== Blog =====
+[read_more]
+other = "Read more"
+
+[posted_on]
+other = "Posted on"
+
+[updated_on]
+other = "Updated on"
+
+[reading_time]
+one = "{{ .Count }} min read"
+other = "{{ .Count }} mins read"
+
+[word_count]
+one = "{{ .Count }} word"
+other = "{{ .Count }} words"
+
+[related_posts]
+other = "Related Posts"
+
+[categories]
+other = "Categories"
+
+[tags]
+other = "Tags"
+
+[series]
+other = "Series"
+
+[no_posts]
+other = "No posts found"
+
+[prev_page]
+other = "Previous"
+
+[next_page]
+other = "Next"
+
+[prev_post]
+other = "Previous Post"
+
+[next_post]
+other = "Next Post"
+
+[all_posts]
+other = "All Posts"
+
+[view_all]
+other = "View all"
+
+[author]
+other = "Author"
+
+# ===== Search =====
+[search]
+other = "Search"
+
+[search_placeholder]
+other = "Search..."
+
+[search_no_results]
+other = "No results found"
+
+[search_results]
+other = "Search Results"
+
+[search_results_for]
+other = "Search results for"
+
+[search_select]
+other = "Select"
+
+[search_powered_by]
+other = "Search powered by"
+
+[search_powered_by_suffix]
+other = ""
+
+# ===== Theme =====
+[theme_light]
+other = "Light"
+
+[theme_dark]
+other = "Dark"
+
+[theme_system]
+other = "System"
+
+[theme_toggle]
+other = "Toggle theme"
+
+[toggleDarkMode]
+other = "Toggle between Dark and Light mode"
+
+# ===== Language =====
+[language]
+other = "Language"
+
+[language_switch]
+other = "Switch language"
+
+[current_language]
+other = "Current language"
+
+# ===== Footer =====
+[footer_copyright]
+other = "All rights reserved."
+
+[footer_powered_by]
+other = "Powered by"
+
+[footer_terms]
+other = "Terms"
+
+[footer_privacy]
+other = "Privacy Policy"
+
+# ===== Actions =====
+[download]
+other = "Download"
+
+[get_started]
+other = "Get Started"
+
+[learn_more]
+other = "Learn more"
+
+[subscribe]
+other = "Subscribe"
+
+[submit]
+other = "Submit"
+
+[send]
+other = "Send"
+
+[cancel]
+other = "Cancel"
+
+[confirm]
+other = "Confirm"
+
+# ===== Hero Section =====
+[hero_tagline]
+other = "Hugo Theme"
+
+[hero_cta_primary]
+other = "Get template"
+
+[hero_cta_secondary]
+other = "Learn more"
+
+# ===== Features Section =====
+[features_tagline]
+other = "Features"
+
+[features_title]
+other = "What you get with HugoWind"
+
+# ===== Blog Section =====
+[blog_tagline]
+other = "Blog"
+
+[blog_title]
+other = "Find out more content in our Blog"
+
+# ===== FAQs Section =====
+[faqs_tagline]
+other = "FAQs"
+
+[faqs_title]
+other = "Frequently Asked Questions"
+
+# ===== Contact Section =====
+[contact_title]
+other = "Get in Touch"
+
+[contact_name]
+other = "Name"
+
+[contact_email]
+other = "Email"
+
+[contact_message]
+other = "Message"
+
+# ===== Misc =====
+[toc]
+other = "Table of Contents"
+
+[share]
+other = "Share"
+
+[back_to_top]
+other = "Back to top"
+
+[loading]
+other = "Loading..."
+
+[error]
+other = "Error"
+
+[not_found]
+other = "Page not found"
+
+[not_found_message]
+other = "The page you are looking for does not exist."
+
+[go_home]
+other = "Go to homepage"
+
+# ===== Date/Time =====
+[published]
+other = "Published"
+
+[last_updated]
+other = "Last updated"
+
+[minutes]
+one = "minute"
+other = "minutes"
+
+[hours]
+one = "hour"
+other = "hours"
+
+[days]
+one = "day"
+other = "days"
+
+[ago]
+other = "ago"
+
+# ===== Multilingual =====
+[available_languages]
+other = "Available in"
+
+[translation_notice]
+other = "This page is also available in other languages"
+
+[no_translation]
+other = "This page is not available in your language"
+
+[view_in_language]
+other = "View in {{ .Language }}"
+
+# ===== Archive =====
+[archive]
+other = "Archive"
+
+[archive_title]
+other = "All Posts"
+
+[posts_in_year]
+one = "{{ .Count }} post"
+other = "{{ .Count }} posts"
+
+# ===== Pagination =====
+[page_of]
+other = "Page {{ .Current }} of {{ .Total }}"
+
+[first_page]
+other = "First"
+
+[last_page]
+other = "Last"

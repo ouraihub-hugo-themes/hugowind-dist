@@ -1,0 +1,34 @@
+{{- /* 
+  图片优化 shortcode
+  需求: 5.2 - 图片优化和 WebP 转换
+  用法: {{< img src="image.jpg" alt="描述" width="800" priority="true" >}}
+*/ -}}
+
+{{- $src := .Get "src" -}}
+{{- $alt := .Get "alt" | default "" -}}
+{{- $caption := .Get "caption" -}}
+{{- $class := .Get "class" | default "rounded-lg shadow-md w-full h-auto" -}}
+{{- $width := .Get "width" -}}
+{{- $height := .Get "height" -}}
+{{- $loading := .Get "loading" | default "lazy" -}}
+{{- $priority := .Get "priority" | default false -}}
+{{- $sizes := .Get "sizes" | default "(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw" -}}
+
+<figure class="my-6">
+  {{- partial "utils/image.html" (dict 
+    "src" $src 
+    "alt" $alt 
+    "class" $class 
+    "width" $width 
+    "height" $height 
+    "loading" $loading 
+    "priority" $priority
+    "sizes" $sizes
+    "page" .Page
+  ) -}}
+  {{- with $caption }}
+  <figcaption class="mt-2 text-center text-sm text-muted dark:text-slate-400">
+    {{ . | markdownify }}
+  </figcaption>
+  {{- end }}
+</figure>

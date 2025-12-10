@@ -1,0 +1,89 @@
+{{- /*
+  Core Web Vitals 性能优化
+  需求: 5.1, 10.5
+  
+  LCP (Largest Contentful Paint) - 最大内容绘制
+  FID (First Input Delay) - 首次输入延迟
+  CLS (Cumulative Layout Shift) - 累积布局偏移
+*/ -}}
+
+{{- /* ========== CLS 优化 - 防止布局偏移 ========== */ -}}
+<style>
+  /* 防止 FOUT (Flash of Unstyled Text) */
+  html {
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  }
+  
+  /* 图片容器预留空间 - 防止 CLS */
+  img:not([width]):not([height]) {
+    aspect-ratio: 16 / 9;
+  }
+  
+  /* 视频容器预留空间 */
+  video:not([width]):not([height]) {
+    aspect-ratio: 16 / 9;
+  }
+  
+  /* iframe 容器预留空间 */
+  iframe:not([width]):not([height]) {
+    aspect-ratio: 16 / 9;
+  }
+  
+  /* Header 固定高度 - 防止 CLS */
+  #header {
+    min-height: 64px;
+    contain: layout style;
+  }
+  
+  /* 广告位预留空间（如果有） */
+  .ad-slot {
+    min-height: 250px;
+    contain: layout;
+  }
+  
+  /* 字体加载优化 */
+  @font-face {
+    font-family: 'Inter';
+    font-display: swap;
+    src: local('Inter');
+  }
+</style>
+
+{{- /* ========== FID 优化 - 延迟非关键脚本 ========== */ -}}
+{{- /* 分析脚本延迟加载 */ -}}
+{{- with .Site.Params.analytics.googleAnalytics.id }}
+{{- if hugo.IsProduction }}
+<script>
+  // 延迟加载 Google Analytics - 优化 FID
+  window.addEventListener('load', function() {
+    setTimeout(function() {
+      var script = document.createElement('script');
+      script.src = 'https://www.googletagmanager.com/gtag/js?id={{ . }}';
+      script.async = true;
+      document.head.appendChild(script);
+      
+      script.onload = function() {
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', '{{ . }}', {
+          'anonymize_ip': true,
+          'cookie_flags': 'SameSite=None;Secure'
+        });
+      };
+    }, 2000); // 延迟 2 秒加载
+  });
+</script>
+{{- end }}
+{{- end }}
+
+{{- /* ========== 资源提示 - 优化加载顺序 ========== */ -}}
+{{- /* 模块预加载 */ -}}
+{{- if hugo.IsProduction }}
+<link rel="modulepreload" href="{{ "js/main.js" | relURL }}">
+{{- end }}
+
+{{- /* 搜索功能延迟加载提示 */ -}}
+{{- if .Site.Params.search.enable }}
+<link rel="prefetch" href="/_pagefind/pagefind.js" as="script">
+{{- end }}

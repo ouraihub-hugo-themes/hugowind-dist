@@ -1,0 +1,64 @@
+# HugoWind 繁體中文參數配置
+# 參考: astrowind/src/config.yaml
+
+# 網站描述 - SEO 用途
+description = "🚀 適用於初創公司、小型企業、SaaS 網站、專業作品集、行銷網站、落地頁和部落格。"
+
+# 作者資訊
+[author]
+  description = "一位熱愛技術的開發者和內容創作者"
+
+# Hero 區域 - 複刻 AstroWind 首頁 Hero
+[hero]
+  title = "使用以下技術建立網站的免費模板"
+  highlight = "Hugo"
+  titleSuffix = "+ Tailwind CSS"
+  subtitle = "HugoWind 是一個免費、可自訂且可用於生產環境的 Hugo + Tailwind CSS 模板。適用於初創公司、小型企業、SaaS 網站、專業作品集、行銷網站、落地頁和部落格。"
+  tagline = "Hugo 主題"
+  
+  [hero.primaryCTA]
+    text = "取得模板"
+    
+  [hero.secondaryCTA]
+    text = "瞭解更多"
+
+# 功能特性區域
+[features]
+  title = "HugoWind 為您提供"
+  subtitle = "目前市場上最專業、最全面的模板之一。2024 年最受歡迎的 Hugo 主題。"
+  tagline = "功能特性"
+
+# 內容區域
+[content]
+  title = "高影響力內容"
+  subtitle = "透過您的受眾無法忽視的內容確保網站成功。"
+
+# 步驟區域
+[steps]
+  title = "使用 HugoWind 快速搭建您的理想網站"
+
+# 部落格區域
+[blog]
+  title = "在我們的部落格中發現更多內容"
+  subtitle = "部落格用於展示 HugoWind 文件。每篇新文章都是您成為使用 Hugo + Tailwind CSS 建立網站專家所需瞭解的重要步驟。"
+  tagline = "部落格"
+  linkText = "檢視所有文章"
+
+# 常見問題區域
+[faqs]
+  title = "常見問題"
+  subtitle = "深入瞭解以下問題，瞭解 HugoWind 提供的強大功能以及它如何提升您的 Web 開發之旅。"
+  tagline = "FAQ"
+
+# 統計區域
+[stats]
+  title = "統計資料"
+
+# 行動號召區域
+[cta]
+  title = "HugoWind：提升您的線上形象"
+  subtitle = "您在此頁面上看到的這些巨大的數字會讓您非常驚訝。"
+
+# 頁尾
+[footer]
+  copyright = "由 onWidget 製作 · 保留所有權利。"

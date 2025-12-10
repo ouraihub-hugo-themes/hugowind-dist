@@ -1,0 +1,155 @@
+{{- /* 
+  SEO Meta 标签管理系统
+  复刻 AstroWind 的 SEO 实现
+  需求: 10.1, 10.2
+*/ -}}
+
+{{- /* 基础变量 */ -}}
+{{- $title := .Title | default .Site.Title -}}
+{{- $description := .Description | default .Params.description | default .Site.Params.description -}}
+{{- $siteTitle := .Site.Params.metadata.title.default | default .Site.Title -}}
+{{- $siteName := .Site.Params.metadata.openGraph.siteName | default .Site.Title -}}
+
+{{- /* 标题处理 - 复刻 AstroWind 的标题模板 */ -}}
+{{- $titleTemplate := .Site.Params.metadata.title.template | default "%s — %s" -}}
+<title>{{ if .IsHome }}{{ $siteTitle }}{{ else }}{{ printf $titleTemplate $title $siteTitle }}{{ end }}</title>
+
+{{- /* 基础 Meta 标签 */ -}}
+<meta name="description" content="{{ $description }}">
+{{- with .Site.Params.keywords }}
+<meta name="keywords" content="{{ delimit . ", " }}">
+{{- end }}
+
+{{- /* 作者信息 */ -}}
+{{- with .Site.Params.author.name }}
+<meta name="author" content="{{ . }}">
+{{- end }}
+
+{{- /* Google Site Verification - 与 AstroWind 对应 */ -}}
+{{- with .Site.Params.site.googleSiteVerificationId }}
+<meta name="google-site-verification" content="{{ . }}">
+{{- end }}
+
+{{- /* Robots 标签 */ -}}
+{{- $robotsIndex := true -}}
+{{- $robotsFollow := true -}}
+{{- /* 全局配置 */ -}}
+{{- with .Site.Params.metadata.robots }}
+  {{- $robotsIndex = .index | default true -}}
+  {{- $robotsFollow = .follow | default true -}}
+{{- end }}
+{{- /* 页面级覆盖 */ -}}
+{{- with .Params.robots }}
+  {{- if isset . "index" }}{{ $robotsIndex = .index }}{{ end -}}
+  {{- if isset . "follow" }}{{ $robotsFollow = .follow }}{{ end -}}
+{{- end }}
+<meta name="robots" content="{{ if $robotsIndex }}index{{ else }}noindex{{ end }}, {{ if $robotsFollow }}follow{{ else }}nofollow{{ end }}">
+
+{{- /* ========== Open Graph 标签 ========== */ -}}
+{{- /* OG 基础标签 */ -}}
+<meta property="og:title" content="{{ $title }}">
+<meta property="og:description" content="{{ $description }}">
+<meta property="og:type" content="{{ if .IsPage }}article{{ else }}website{{ end }}">
+<meta property="og:url" content="{{ .Permalink }}">
+<meta property="og:site_name" content="{{ $siteName }}">
+<meta property="og:locale" content="{{ .Site.Language.Lang | default "en" }}">
+
+{{- /* OG Image 处理 */ -}}
+{{- $ogImage := "" -}}
+{{- $ogImageWidth := 1200 -}}
+{{- $ogImageHeight := 628 -}}
+
+{{- /* 优先级: 页面图片 > 默认图片 */ -}}
+{{- with .Params.image }}
+  {{- $ogImage = . -}}
+{{- else }}
+  {{- with .Site.Params.metadata.openGraph.image }}
+    {{- $ogImage = .url -}}
+    {{- with .width }}{{ $ogImageWidth = . }}{{ end -}}
+    {{- with .height }}{{ $ogImageHeight = . }}{{ end -}}
+  {{- end }}
+{{- end }}
+
+{{- with $ogImage }}
+<meta property="og:image" content="{{ . | absURL }}">
+<meta property="og:image:width" content="{{ $ogImageWidth }}">
+<meta property="og:image:height" content="{{ $ogImageHeight }}">
+<meta property="og:image:type" content="image/png">
+{{- with $.Params.imageAlt }}
+<meta property="og:image:alt" content="{{ . }}">
+{{- else }}
+<meta property="og:image:alt" content="{{ $title }}">
+{{- end }}
+{{- end }}
+
+{{- /* 文章特定 OG 标签 */ -}}
+{{- if .IsPage }}
+{{- with .PublishDate }}
+<meta property="article:published_time" content="{{ .Format "2006-01-02T15:04:05Z07:00" }}">
+{{- end }}
+{{- with .Lastmod }}
+<meta property="article:modified_time" content="{{ .Format "2006-01-02T15:04:05Z07:00" }}">
+{{- end }}
+{{- with .Site.Params.author.name }}
+<meta property="article:author" content="{{ . }}">
+{{- end }}
+{{- with .Section }}
+<meta property="article:section" content="{{ . | title }}">
+{{- end }}
+{{- range .Params.tags }}
+<meta property="article:tag" content="{{ . }}">
+{{- end }}
+{{- end }}
+
+{{- /* ========== Twitter Card 标签 ========== */ -}}
+{{- $twitterCardType := "summary" -}}
+{{- with $ogImage }}{{ $twitterCardType = "summary_large_image" }}{{ end -}}
+{{- with .Site.Params.metadata.twitter.cardType }}{{ $twitterCardType = . }}{{ end -}}
+
+<meta name="twitter:card" content="{{ $twitterCardType }}">
+{{- with .Site.Params.metadata.twitter.site }}
+<meta name="twitter:site" content="{{ . }}">
+{{- end }}
+{{- with .Site.Params.metadata.twitter.handle }}
+<meta name="twitter:creator" content="{{ . }}">
+{{- end }}
+<meta name="twitter:title" content="{{ $title }}">
+<meta name="twitter:description" content="{{ $description }}">
+{{- with $ogImage }}
+<meta name="twitter:image" content="{{ . | absURL }}">
+{{- with $.Params.imageAlt }}
+<meta name="twitter:image:alt" content="{{ . }}">
+{{- else }}
+<meta name="twitter:image:alt" content="{{ $title }}">
+{{- end }}
+{{- end }}
+
+{{- /* ========== Canonical URL ========== */ -}}
+{{- $canonical := .Permalink -}}
+{{- with .Params.canonical }}{{ $canonical = . }}{{ end -}}
+<link rel="canonical" href="{{ $canonical }}">
+
+{{- /* ========== 多语言 hreflang 标签 (需求: 10.3, 10.6) ========== */ -}}
+{{- if gt (len .Site.Languages) 1 }}
+{{- /* 当前页面的所有语言版本 */ -}}
+{{- if .IsTranslated }}
+{{- range .AllTranslations }}
+<link rel="alternate" hreflang="{{ .Language.Lang }}" href="{{ .Permalink }}">
+{{- end }}
+{{- /* x-default 指向默认语言版本 */ -}}
+{{- range .AllTranslations }}
+{{- if eq .Language.Lang $.Site.LanguageCode }}
+<link rel="alternate" hreflang="x-default" href="{{ .Permalink }}">
+{{- end }}
+{{- end }}
+{{- else }}
+{{- /* 页面没有翻译版本，只输出当前语言 */ -}}
+<link rel="alternate" hreflang="{{ .Language.Lang }}" href="{{ .Permalink }}">
+{{- if eq .Language.Lang .Site.LanguageCode }}
+<link rel="alternate" hreflang="x-default" href="{{ .Permalink }}">
+{{- end }}
+{{- end }}
+{{- end }}
+
+{{- /* ========== JSON-LD 结构化数据 ========== */ -}}
+{{- partial "head/schema.html" . -}}

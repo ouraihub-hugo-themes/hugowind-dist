@@ -1,0 +1,59 @@
+{{- define "main" }}
+<section class="px-4 sm:px-6 py-12 sm:py-16 lg:py-20 mx-auto max-w-7xl">
+  {{- /* 页面标题区域 */ -}}
+  <header class="mb-12 md:mb-16 text-center">
+    <p class="text-base text-secondary dark:text-blue-200 font-bold tracking-wide uppercase mb-2">
+      {{- if eq .Data.Singular "category" }}
+      {{ i18n "categories" | default "Categories" }}
+      {{- else if eq .Data.Singular "tag" }}
+      {{ i18n "tags" | default "Tags" }}
+      {{- else }}
+      {{ .Data.Singular | title }}
+      {{- end }}
+    </p>
+    <h1 class="text-4xl md:text-5xl font-bold leading-tighter tracking-tighter font-heading dark:text-slate-200">
+      {{ .Title }}
+    </h1>
+    <p class="mt-4 text-xl text-muted dark:text-slate-400">
+      {{ i18n "posts_in_year" (len .Pages) | default (printf "%d posts" (len .Pages)) }}
+    </p>
+  </header>
+  
+  {{- /* 所有分类/标签列表 */ -}}
+  <div class="mb-12 flex flex-wrap justify-center gap-3">
+    {{- $taxonomy := .Data.Plural }}
+    {{- range $name, $items := site.Taxonomies }}
+    {{- if eq $name $taxonomy }}
+    {{- range $term, $pages := $items }}
+    {{- $isActive := eq $term $.Title }}
+    <a href="{{ printf "/%s/%s/" $taxonomy ($term | urlize) | relLangURL }}" 
+       class="inline-flex items-center px-4 py-2 text-sm rounded-full transition {{ if $isActive }}bg-primary text-white dark:bg-blue-600{{ else }}bg-gray-100 dark:bg-slate-700 text-muted dark:text-slate-300 hover:text-primary dark:hover:text-blue-400{{ end }}">
+      {{ $term }}
+      <span class="ml-2 px-2 py-0.5 text-xs rounded-full {{ if $isActive }}bg-white/20{{ else }}bg-gray-200 dark:bg-slate-600{{ end }}">
+        {{ len $pages }}
+      </span>
+    </a>
+    {{- end }}
+    {{- end }}
+    {{- end }}
+  </div>
+  
+  {{- /* 文章列表 */ -}}
+  {{- if gt (len .Pages) 0 }}
+  <div class="grid gap-6 md:gap-8 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
+    {{- range .Pages }}
+    {{ partial "blog/post-card.html" . }}
+    {{- end }}
+  </div>
+  
+  {{- /* 分页 */ -}}
+  {{ partial "blog/pagination.html" . }}
+  {{- else }}
+  <div class="text-center py-12">
+    <p class="text-xl text-muted dark:text-slate-400">
+      {{ i18n "no_posts" | default "No posts found." }}
+    </p>
+  </div>
+  {{- end }}
+</section>
+{{- end }}

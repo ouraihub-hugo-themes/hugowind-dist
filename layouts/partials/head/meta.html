@@ -1,0 +1,80 @@
+{{- /*
+  Meta 标签和资源预加载
+  需求: 5.1, 10.5 - Core Web Vitals 优化
+*/ -}}
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+{{- /* 生成器标识 */ -}}
+<meta name="generator" content="Hugo {{ hugo.Version }}">
+
+{{- /* Favicon */ -}}
+<link rel="icon" type="image/x-icon" href="{{ .Site.Params.assets.favicon | default "/favicon.ico" }}">
+{{- with .Site.Params.assets.appleTouchIcon }}
+<link rel="apple-touch-icon" sizes="180x180" href="{{ . }}">
+{{- end }}
+
+{{- /* Sitemap */ -}}
+<link rel="sitemap" href="{{ "sitemap.xml" | absURL }}">
+
+{{- /* RSS Feed */ -}}
+{{- with .OutputFormats.Get "RSS" }}
+<link rel="alternate" type="application/rss+xml" title="{{ $.Site.Title }}" href="{{ .Permalink }}">
+{{- end }}
+
+{{- /* ========== Core Web Vitals 优化 ========== */ -}}
+
+{{- /* DNS 预解析 - 减少 DNS 查询时间 */ -}}
+<link rel="dns-prefetch" href="https://fonts.googleapis.com">
+<link rel="dns-prefetch" href="https://fonts.gstatic.com">
+{{- with .Site.Params.cdn.url }}
+<link rel="dns-prefetch" href="{{ . }}">
+{{- end }}
+
+{{- /* 预连接优化 - 建立早期连接 */ -}}
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+{{- with .Site.Params.cdn.url }}
+<link rel="preconnect" href="{{ . }}" crossorigin>
+{{- end }}
+
+{{- /* 关键资源预加载 - 优化 LCP */ -}}
+{{- if .Site.Params.performance.preloadCritical | default true }}
+  {{- /* 预加载字体 */ -}}
+  <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" as="style">
+  
+  {{- /* 预加载主样式 - Tailwind CSS 编译到 static/css/main.css */ -}}
+  <link rel="preload" href="{{ "css/main.css" | relURL }}" as="style">
+  
+  {{- /* 预加载 LCP 图片（首页 Hero 图片） */ -}}
+  {{- if .IsHome }}
+    {{- with .Site.Params.hero.image }}
+  <link rel="preload" href="{{ . | absURL }}" as="image" fetchpriority="high">
+    {{- end }}
+  {{- end }}
+  
+  {{- /* 预加载文章封面图（文章页） */ -}}
+  {{- if .IsPage }}
+    {{- with .Params.image }}
+  <link rel="preload" href="{{ . | absURL }}" as="image" fetchpriority="high">
+    {{- end }}
+  {{- end }}
+{{- end }}
+
+{{- /* Inter 字体 - 使用 display=swap 优化 FCP */ -}}
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+{{- /* 预取下一页资源 - 优化导航体验 */ -}}
+{{- if .IsPage }}
+  {{- with .NextInSection }}
+<link rel="prefetch" href="{{ .Permalink }}">
+  {{- end }}
+  {{- with .PrevInSection }}
+<link rel="prefetch" href="{{ .Permalink }}">
+  {{- end }}
+{{- end }}
+
+{{- /* 主题色 */ -}}
+<meta name="theme-color" content="{{ .Site.Params.ui.themeColor | default "#ffffff" }}" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="{{ .Site.Params.ui.themeColorDark | default "#030620" }}" media="(prefers-color-scheme: dark)">

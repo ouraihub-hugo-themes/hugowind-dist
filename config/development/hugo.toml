@@ -1,0 +1,22 @@
+# 开发环境配置
+
+baseURL = 'http://localhost:1313/'
+
+# 开发模式下禁用压缩
+[minify]
+  disableCSS = true
+  disableHTML = true
+  disableJS = true
+  minifyOutput = false
+
+# 开发模式下的构建配置
+[build]
+  writeStats = true
+
+# 开发服务器配置
+[server]
+  [[server.headers]]
+    for = "/**"
+    [server.headers.values]
+      X-Frame-Options = "SAMEORIGIN"
+      X-Content-Type-Options = "nosniff"

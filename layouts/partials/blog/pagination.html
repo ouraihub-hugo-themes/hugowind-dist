@@ -1,0 +1,78 @@
+{{- /* 分页组件 - 参考 AstroWind Pagination.astro */ -}}
+{{- $paginator := .Paginator }}
+{{- if gt $paginator.TotalPages 1 }}
+<nav class="container flex mt-12 md:mt-16" aria-label="{{ i18n "pagination" | default "Pagination" }}">
+  <div class="flex flex-row mx-auto justify-between items-center gap-4">
+    {{- /* 上一页按钮 */ -}}
+    {{- if $paginator.HasPrev }}
+    <a href="{{ $paginator.Prev.URL }}" 
+       class="inline-flex items-center px-4 py-2 text-sm font-medium text-muted dark:text-slate-300 bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-lg hover:bg-gray-50 dark:hover:bg-slate-700 hover:text-primary dark:hover:text-blue-400 transition">
+      <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+      </svg>
+      {{ i18n "prev_page" | default "Newer posts" }}
+    </a>
+    {{- else }}
+    <span class="invisible inline-flex items-center px-4 py-2 text-sm">
+      {{ i18n "prev_page" | default "Newer posts" }}
+    </span>
+    {{- end }}
+    
+    {{- /* 页码指示器 */ -}}
+    <div class="hidden sm:flex items-center gap-1">
+      {{- /* 首页 */ -}}
+      {{- if gt $paginator.PageNumber 2 }}
+      <a href="{{ $paginator.First.URL }}" 
+         class="px-3 py-2 text-sm text-muted dark:text-slate-400 hover:text-primary dark:hover:text-blue-400 transition rounded">
+        1
+      </a>
+      {{- if gt $paginator.PageNumber 3 }}
+      <span class="px-2 text-muted dark:text-slate-500">...</span>
+      {{- end }}
+      {{- end }}
+      
+      {{- /* 当前页附近的页码 */ -}}
+      {{- range $paginator.Pagers }}
+      {{- $distance := math.Abs (sub .PageNumber $paginator.PageNumber) }}
+      {{- if le $distance 1 }}
+      <a href="{{ .URL }}" 
+         class="px-3 py-2 text-sm rounded transition {{ if eq .PageNumber $paginator.PageNumber }}font-bold text-white bg-primary dark:bg-blue-600{{ else }}text-muted dark:text-slate-400 hover:text-primary dark:hover:text-blue-400 hover:bg-gray-100 dark:hover:bg-slate-700{{ end }}">
+        {{ .PageNumber }}
+      </a>
+      {{- end }}
+      {{- end }}
+      
+      {{- /* 末页 */ -}}
+      {{- if lt $paginator.PageNumber (sub $paginator.TotalPages 1) }}
+      {{- if lt $paginator.PageNumber (sub $paginator.TotalPages 2) }}
+      <span class="px-2 text-muted dark:text-slate-500">...</span>
+      {{- end }}
+      <a href="{{ $paginator.Last.URL }}" 
+         class="px-3 py-2 text-sm text-muted dark:text-slate-400 hover:text-primary dark:hover:text-blue-400 transition rounded">
+        {{ $paginator.TotalPages }}
+      </a>
+      {{- end }}
+    </div>
+    
+    {{- /* 移动端页码显示 */ -}}
+    <span class="sm:hidden text-sm text-muted dark:text-slate-400">
+      {{ i18n "page_of" (dict "Current" $paginator.PageNumber "Total" $paginator.TotalPages) | default (printf "Page %d of %d" $paginator.PageNumber $paginator.TotalPages) }}
+    </span>
+    
+    {{- /* 下一页按钮 */ -}}
+    {{- if $paginator.HasNext }}
+    <a href="{{ $paginator.Next.URL }}" 
+       class="inline-flex items-center px-4 py-2 text-sm font-medium text-muted dark:text-slate-300 bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-lg hover:bg-gray-50 dark:hover:bg-slate-700 hover:text-primary dark:hover:text-blue-400 transition">
+      {{ i18n "next_page" | default "Older posts" }}
+      <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+      </svg>
+    </a>
+    {{- else }}
+    <span class="invisible inline-flex items-center px-4 py-2 text-sm">
+      {{ i18n "next_page" | default "Older posts" }}
+    </span>
+    {{- end }}
+  </div>
+</nav>
+{{- end }}

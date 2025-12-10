@@ -1,0 +1,304 @@
+{{- /* 
+  主脚本文件 - 资源优化
+  需求: 5.2 - JS 压缩和合并、资源缓存策略
+  
+  架构说明：
+  - 源码: assets/ts/main.ts, assets/ts/toggle-theme.ts
+  - 编译: static/js/main.js, static/js/toggle-theme.js
+  - 使用 pnpm run ts:build 预编译，不使用 Hugo js.Build
+*/ -}}
+
+{{- /* CDN 配置 */ -}}
+{{- $cdnURL := .Site.Params.cdn.url | default "" -}}
+{{- $useCDN := and (hugo.IsProduction) (ne $cdnURL "") -}}
+
+{{- /* 主脚本 - 预编译到 static/js/main.js */ -}}
+{{- if $useCDN }}
+<script src="{{ $cdnURL }}/js/main.js" defer></script>
+{{- else }}
+<script src="{{ "js/main.js" | relURL }}" defer></script>
+{{- end }}
+
+{{- /* 内联脚本 - 与 AstroWind BasicScripts 保持一致 */ -}}
+<script>
+  (function() {
+    if (window.hugowind_basic_script) return;
+    window.hugowind_basic_script = true;
+    
+    var defaultTheme = '{{ .Site.Params.ui.theme | default "system" }}';
+    
+    // 主题应用函数
+    function applyTheme(theme) {
+      if (theme === 'dark') {
+        document.documentElement.classList.add('dark');
+      } else {
+        document.documentElement.classList.remove('dark');
+      }
+    }
+    
+    // 初始化主题
+    function initTheme() {
+      if (defaultTheme && defaultTheme.endsWith(':only')) {
+        applyTheme(defaultTheme.replace(':only', ''));
+      } else if (!localStorage.theme && defaultTheme !== 'system') {
+        applyTheme(defaultTheme);
+      } else if (
+        localStorage.theme === 'dark' ||
+        (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)
+      ) {
+        applyTheme('dark');
+      } else {
+        applyTheme('light');
+      }
+    }
+    initTheme();
+    
+    // 事件绑定辅助函数
+    function attachEvent(selector, event, fn) {
+      var matches = typeof selector === 'string' ? document.querySelectorAll(selector) : selector;
+      if (matches && matches.length) {
+        matches.forEach(function(elem) {
+          elem.addEventListener(event, function(e) { fn(e, elem); }, false);
+        });
+      }
+    }
+    
+    // 页面加载完成后的初始化
+    function onLoad() {
+      var lastKnownScrollPosition = window.scrollY;
+      var ticking = true;
+      
+      // 导航菜单点击关闭
+      attachEvent('#header nav', 'click', function() {
+        var toggleBtn = document.querySelector('[data-aw-toggle-menu]');
+        if (toggleBtn) toggleBtn.classList.remove('expanded');
+        document.body.classList.remove('overflow-hidden');
+        var header = document.getElementById('header');
+        if (header) {
+          header.classList.remove('h-screen', 'expanded', 'bg-page');
+        }
+        var nav = document.querySelector('#header nav');
+        if (nav) nav.classList.add('hidden');
+        var lastChild = document.querySelector('#header > div > div:last-child');
+        if (lastChild) lastChild.classList.add('hidden');
+      });
+      
+      // 汉堡菜单切换
+      attachEvent('[data-aw-toggle-menu]', 'click', function(e, elem) {
+        elem.classList.toggle('expanded');
+        document.body.classList.toggle('overflow-hidden');
+        var header = document.getElementById('header');
+        if (header) {
+          header.classList.toggle('h-screen');
+          header.classList.toggle('expanded');
+          header.classList.toggle('bg-page');
+        }
+        var nav = document.querySelector('#header nav');
+        if (nav) nav.classList.toggle('hidden');
+        var lastChild = document.querySelector('#header > div > div:last-child');
+        if (lastChild) lastChild.classList.toggle('hidden');
+      });
+      
+      // 主题切换
+      attachEvent('[data-aw-toggle-color-scheme]', 'click', function() {
+        if (defaultTheme.endsWith(':only')) return;
+        document.documentElement.classList.toggle('dark');
+        localStorage.theme = document.documentElement.classList.contains('dark') ? 'dark' : 'light';
+      });
+      
+      // 社交分享
+      attachEvent('[data-aw-social-share]', 'click', function(e, elem) {
+        var network = elem.getAttribute('data-aw-social-share');
+        var url = encodeURIComponent(elem.getAttribute('data-aw-url') || '');
+        var text = encodeURIComponent(elem.getAttribute('data-aw-text') || '');
+        var href;
+        
+        switch (network) {
+          case 'facebook':
+            href = 'https://www.facebook.com/sharer.php?u=' + url;
+            break;
+          case 'twitter':
+            href = 'https://twitter.com/intent/tweet?url=' + url + '&text=' + text;
+            break;
+          case 'linkedin':
+            href = 'https://www.linkedin.com/shareArticle?mini=true&url=' + url + '&title=' + text;
+            break;
+          case 'whatsapp':
+            href = 'https://wa.me/?text=' + text + '%20' + url;
+            break;
+          case 'mail':
+            href = 'mailto:?subject=%22' + text + '%22&body=' + text + '%20' + url;
+            break;
+          default:
+            return;
+        }
+        
+        var newlink = document.createElement('a');
+        newlink.target = '_blank';
+        newlink.href = href;
+        newlink.click();
+      });
+      
+      // 响应式菜单重置
+      var screenSize = window.matchMedia('(max-width: 767px)');
+      screenSize.addEventListener('change', function() {
+        var toggleBtn = document.querySelector('[data-aw-toggle-menu]');
+        if (toggleBtn) toggleBtn.classList.remove('expanded');
+        document.body.classList.remove('overflow-hidden');
+        var header = document.getElementById('header');
+        if (header) {
+          header.classList.remove('h-screen', 'expanded', 'bg-page');
+        }
+        var nav = document.querySelector('#header nav');
+        if (nav) nav.classList.add('hidden');
+        var lastChild = document.querySelector('#header > div > div:last-child');
+        if (lastChild) lastChild.classList.add('hidden');
+      });
+      
+      // 滚动时 Header 样式变化
+      function applyHeaderStylesOnScroll() {
+        var header = document.querySelector('#header[data-aw-sticky-header]');
+        if (!header) return;
+        if (lastKnownScrollPosition > 60 && !header.classList.contains('scroll')) {
+          header.classList.add('scroll');
+        } else if (lastKnownScrollPosition <= 60 && header.classList.contains('scroll')) {
+          header.classList.remove('scroll');
+        }
+        ticking = false;
+      }
+      applyHeaderStylesOnScroll();
+      
+      attachEvent([document], 'scroll', function() {
+        lastKnownScrollPosition = window.scrollY;
+        if (!ticking) {
+          window.requestAnimationFrame(function() {
+            applyHeaderStylesOnScroll();
+          });
+          ticking = true;
+        }
+      });
+    }
+    
+    // 页面显示时的初始化
+    function onPageShow() {
+      document.documentElement.classList.add('motion-safe:scroll-smooth');
+      var elem = document.querySelector('[data-aw-toggle-menu]');
+      if (elem) elem.classList.remove('expanded');
+      document.body.classList.remove('overflow-hidden');
+      var header = document.getElementById('header');
+      if (header) {
+        header.classList.remove('h-screen', 'expanded');
+      }
+      var nav = document.querySelector('#header nav');
+      if (nav) nav.classList.add('hidden');
+    }
+    
+    window.onload = onLoad;
+    window.onpageshow = onPageShow;
+  })();
+</script>
+
+{{- /* 交叉观察器动画 - 与 AstroWind Observer 一致 */ -}}
+<script>
+  (function() {
+    var Observer = {
+      observer: null,
+      delayBetweenAnimations: 100,
+      animationCounter: 0,
+      elements: null,
+      
+      start: function() {
+        var self = this;
+        var selectors = [
+          '[class*=" intersect:"]',
+          '[class*=":intersect:"]',
+          '[class^="intersect:"]',
+          '[class="intersect"]',
+          '[class*=" intersect "]',
+          '[class^="intersect "]',
+          '[class$=" intersect"]'
+        ];
+        
+        this.elements = Array.from(document.querySelectorAll(selectors.join(',')));
+        
+        function getThreshold(element) {
+          if (element.classList.contains('intersect-full')) return 0.99;
+          if (element.classList.contains('intersect-half')) return 0.5;
+          if (element.classList.contains('intersect-quarter')) return 0.25;
+          return 0;
+        }
+        
+        this.elements.forEach(function(el) {
+          el.setAttribute('no-intersect', '');
+          el._intersectionThreshold = getThreshold(el);
+        });
+        
+        var callback = function(entries) {
+          entries.forEach(function(entry) {
+            requestAnimationFrame(function() {
+              var target = entry.target;
+              var intersectionRatio = entry.intersectionRatio;
+              var threshold = target._intersectionThreshold;
+              
+              if (target.classList.contains('intersect-no-queue')) {
+                if (entry.isIntersecting) {
+                  target.removeAttribute('no-intersect');
+                  if (target.classList.contains('intersect-once')) {
+                    self.observer.unobserve(target);
+                  }
+                } else {
+                  target.setAttribute('no-intersect', '');
+                }
+                return;
+              }
+              
+              if (intersectionRatio >= threshold) {
+                if (!target.hasAttribute('data-animated')) {
+                  target.removeAttribute('no-intersect');
+                  target.setAttribute('data-animated', 'true');
+                  
+                  var delay = self.animationCounter * self.delayBetweenAnimations;
+                  self.animationCounter++;
+                  
+                  target.style.transitionDelay = delay + 'ms';
+                  target.style.animationDelay = delay + 'ms';
+                  
+                  if (target.classList.contains('intersect-once')) {
+                    self.observer.unobserve(target);
+                  }
+                }
+              } else {
+                target.setAttribute('no-intersect', '');
+                target.removeAttribute('data-animated');
+                target.style.transitionDelay = '';
+                target.style.animationDelay = '';
+                self.animationCounter = 0;
+              }
+            });
+          });
+        };
+        
+        this.observer = new IntersectionObserver(callback, { threshold: [0, 0.25, 0.5, 0.99] });
+        
+        this.elements.forEach(function(el) {
+          self.observer.observe(el);
+        });
+      },
+      
+      removeAnimationDelay: function() {
+        this.elements.forEach(function(el) {
+          if (el.getAttribute('data-animated') === 'true') {
+            el.style.transitionDelay = '';
+            el.style.animationDelay = '';
+          }
+        });
+      }
+    };
+    
+    Observer.start();
+    window.HugoWindObserver = Observer;
+  })();
+</script>
+
+{{- /* 延迟加载非关键脚本 - FID 优化 */ -}}
+{{- partial "scripts/deferred.html" . -}}

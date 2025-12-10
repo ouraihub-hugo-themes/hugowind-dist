@@ -1,0 +1,49 @@
+{{- /* 上一篇/下一篇文章导航 */ -}}
+{{- $prev := .PrevInSection }}
+{{- $next := .NextInSection }}
+
+{{- if or $prev $next }}
+<nav class="mt-12 pt-8 border-t dark:border-slate-700" aria-label="{{ i18n "post_navigation" | default "Post navigation" }}">
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+    {{- /* 上一篇 */ -}}
+    {{- with $prev }}
+    <a href="{{ .RelPermalink }}" 
+       class="group flex items-center p-4 bg-gray-50 dark:bg-slate-800/50 rounded-lg border border-gray-200 dark:border-slate-700 hover:border-primary dark:hover:border-blue-500 transition">
+      <svg class="w-6 h-6 mr-3 text-muted dark:text-slate-500 group-hover:text-primary dark:group-hover:text-blue-400 transition shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+      </svg>
+      <div class="min-w-0">
+        <span class="text-xs text-muted dark:text-slate-500 uppercase tracking-wide">
+          {{ i18n "prev_post" | default "Previous" }}
+        </span>
+        <p class="mt-1 font-medium dark:text-slate-200 group-hover:text-primary dark:group-hover:text-blue-400 transition truncate">
+          {{ .Title }}
+        </p>
+      </div>
+    </a>
+    {{- else }}
+    <div></div>
+    {{- end }}
+    
+    {{- /* 下一篇 */ -}}
+    {{- with $next }}
+    <a href="{{ .RelPermalink }}" 
+       class="group flex items-center justify-end p-4 bg-gray-50 dark:bg-slate-800/50 rounded-lg border border-gray-200 dark:border-slate-700 hover:border-primary dark:hover:border-blue-500 transition text-right">
+      <div class="min-w-0">
+        <span class="text-xs text-muted dark:text-slate-500 uppercase tracking-wide">
+          {{ i18n "next_post" | default "Next" }}
+        </span>
+        <p class="mt-1 font-medium dark:text-slate-200 group-hover:text-primary dark:group-hover:text-blue-400 transition truncate">
+          {{ .Title }}
+        </p>
+      </div>
+      <svg class="w-6 h-6 ml-3 text-muted dark:text-slate-500 group-hover:text-primary dark:group-hover:text-blue-400 transition shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+      </svg>
+    </a>
+    {{- else }}
+    <div></div>
+    {{- end }}
+  </div>
+</nav>
+{{- end }}

@@ -1,0 +1,57 @@
+# HugoWind 多语言配置
+# 与 AstroWind 保持一致，默认英文，支持多语言扩展
+# 参考: astrowind/src/config.yaml i18n 配置
+
+# 英文 (默认语言) - 与 AstroWind i18n.language: en 对应
+[en]
+  languageCode = 'en-US'
+  languageName = 'English'
+  weight = 1
+  contentDir = 'content/en'
+  title = 'HugoWind'
+  
+  [en.params]
+    # 日期格式
+    dateFormat = 'January 2, 2006'
+    dateFormatShort = 'Jan 2, 2006'
+    textDirection = 'ltr'
+    
+    # 语言显示
+    languageFlag = '🇺🇸'
+    languageShortName = 'EN'
+
+# 简体中文
+[zh]
+  languageCode = 'zh-CN'
+  languageName = '简体中文'
+  weight = 2
+  contentDir = 'content/zh'
+  title = 'HugoWind'
+  
+  [zh.params]
+    # 日期格式
+    dateFormat = '2006年01月02日'
+    dateFormatShort = '01月02日'
+    textDirection = 'ltr'
+    
+    # 语言显示
+    languageFlag = '🇨🇳'
+    languageShortName = '中文'
+
+# 繁体中文
+[zh-tw]
+  languageCode = 'zh-TW'
+  languageName = '繁體中文'
+  weight = 3
+  contentDir = 'content/zh-tw'
+  title = 'HugoWind'
+  
+  [zh-tw.params]
+    # 日期格式
+    dateFormat = '2006年01月02日'
+    dateFormatShort = '01月02日'
+    textDirection = 'ltr'
+    
+    # 语言显示
+    languageFlag = '🇹🇼'
+    languageShortName = '繁中'

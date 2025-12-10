@@ -1,0 +1,53 @@
+# HugoWind - Markdown 渲染配置
+# 参考: AstroWind 的 Markdown 处理和代码高亮
+
+# Goldmark - Hugo 默认的 Markdown 解析器
+[goldmark]
+  # 扩展功能
+  [goldmark.extensions]
+    definitionList = true
+    footnote = true
+    linkify = true
+    linkifyProtocol = 'https'
+    strikethrough = true
+    table = true
+    taskList = true
+    typographer = true
+  
+  # 解析器配置
+  [goldmark.parser]
+    autoHeadingID = true
+    autoHeadingIDType = 'github'
+    wrapStandAloneImageWithinParagraph = false
+    
+    [goldmark.parser.attribute]
+      block = true
+      title = true
+  
+  # 渲染器配置
+  [goldmark.renderer]
+    hardWraps = false
+    unsafe = true  # 允许原始 HTML
+    xhtml = false
+
+# 代码高亮配置 - 使用 Chroma
+[highlight]
+  anchorLineNos = false
+  codeFences = true
+  guessSyntax = true
+  hl_Lines = ''
+  hl_inline = false
+  lineAnchors = ''
+  lineNoStart = 1
+  lineNos = false
+  lineNumbersInTable = true
+  noClasses = false  # 使用 CSS 类而非内联样式
+  noHl = false
+  style = 'dracula'  # 代码高亮主题
+  tabWidth = 2
+
+# 目录配置
+[tableOfContents]
+  endLevel = 4
+  ordered = false
+  startLevel = 2

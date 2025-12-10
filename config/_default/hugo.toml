@@ -1,0 +1,117 @@
+# HugoWind - Hugo 主配置文件
+# 基于 AstroWind 主题迁移的现代化 Hugo 主题
+# 参考: astrowind/src/config.yaml
+
+baseURL = 'https://hugowind.vercel.app/'
+title = 'HugoWind'
+languageCode = 'en'
+defaultContentLanguage = 'en'
+defaultContentLanguageInSubdir = true
+
+# 多语言回退机制
+# 当某语言缺少内容时，回退到默认语言
+enableMissingTranslationPlaceholders = false
+disableLanguages = []
+
+# 与 AstroWind 保持一致: trailingSlash: false
+disablePathToLower = false
+removePathAccents = true
+
+# Hugo 版本要求
+[module]
+  [module.hugoVersion]
+    extended = true
+    min = "0.120.0"
+
+# 构建配置
+[build]
+  writeStats = true
+  useResourceCacheWhen = 'fallback'
+
+# 输出格式
+[outputs]
+  home = ['HTML', 'RSS', 'JSON', 'ROBOTS']
+  page = ['HTML']
+  section = ['HTML', 'RSS']
+  taxonomy = ['HTML', 'RSS']
+  term = ['HTML', 'RSS']
+
+# 自定义输出格式
+[outputFormats]
+  [outputFormats.ROBOTS]
+    mediaType = "text/plain"
+    baseName = "robots"
+    isPlainText = true
+    notAlternative = true
+
+# Sitemap 配置
+[sitemap]
+  changefreq = "weekly"
+  filename = "sitemap.xml"
+  priority = 0.5
+
+# 永久链接配置 - 与 AstroWind 保持一致: /%slug%
+[permalinks]
+  posts = '/:slug/'
+  categories = '/category/:slug/'
+  tags = '/tag/:slug/'
+
+# 分类法 - 与 AstroWind 保持一致
+[taxonomies]
+  tag = 'tags'
+  category = 'categories'
+  series = 'series'
+
+# 安全配置
+[security]
+  [security.funcs]
+    getenv = ['^HUGO_', '^CI$', '^GOOGLE_']
+
+# 缓存配置
+[caches]
+  [caches.images]
+    dir = ':resourceDir/_gen'
+    maxAge = '720h'
+  [caches.assets]
+    dir = ':resourceDir/_gen'
+    maxAge = '720h'
+
+# 压缩配置
+[minify]
+  disableCSS = false
+  disableHTML = false
+  disableJS = false
+  disableJSON = false
+  disableSVG = false
+  disableXML = false
+  minifyOutput = true
+  [minify.tdewolff]
+    [minify.tdewolff.html]
+      keepWhitespace = false
+      keepEndTags = true
+      keepQuotes = false
+    [minify.tdewolff.css]
+      precision = 0
+    [minify.tdewolff.js]
+      precision = 0
+      keepVarNames = false
+
+# 图片处理配置 - 需求: 5.2
+[imaging]
+  # 默认图片质量
+  quality = 85
+  # 默认重采样滤镜
+  resampleFilter = "Lanczos"
+  # 锚点位置
+  anchor = "Smart"
+  # 背景色（用于透明图片）
+  bgColor = "#ffffff"
+  # 提示信息
+  hint = "photo"
+  
+  # EXIF 数据处理
+  [imaging.exif]
+    disableDate = false
+    disableLatLong = true
+    includeFields = ""
+    excludeFields = ""

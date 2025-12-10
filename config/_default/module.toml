@@ -1,0 +1,22 @@
+# Hugo Modules 配置
+# 定义主题提供的目录挂载
+
+[[mounts]]
+source = "layouts"
+target = "layouts"
+
+[[mounts]]
+source = "static"
+target = "static"
+
+[[mounts]]
+source = "i18n"
+target = "i18n"
+
+[[mounts]]
+source = "archetypes"
+target = "archetypes"
+
+[[mounts]]
+source = "assets"
+target = "assets"
